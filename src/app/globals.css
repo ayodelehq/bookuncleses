@@ -1,26 +1,61 @@
 @import "tailwindcss";
 
+/* Every value below is pulled from Eventry's actual shipped CSS (verified
+   via its live rgb()/var(--token-*) declarations), not eyeballed from
+   screenshots — see DESIGN.md for the source mapping. Eventry is a single
+   fixed light brand with deliberate dark-green section blocks (footer, CTA
+   bands), not a light/dark toggle, so there is no prefers-color-scheme
+   override here. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f2f3f3;
+  --foreground: #30403e;
+  --ink: #000000;
+  --surface: #ffffff;
+  --surface-alt: #d8e4e3;
+  --border-subtle: #ced1ce;
+  --brand: #038262;
+  --brand-foreground: #ffffff;
+  --brand-soft: #9acf8b;
+  --muted: #52615f;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-ink: var(--ink);
+  --color-surface: var(--surface);
+  --color-surface-alt: var(--surface-alt);
+  --color-border-subtle: var(--border-subtle);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-soft: var(--brand-soft);
+  --color-muted: var(--muted);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-heading-raw);
+  --font-mono: var(--font-mono-raw);
+  --font-accent: var(--font-accent-raw);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Eventry's real breakpoints (measured from its shipped CSS), replacing
+     Tailwind's defaults (640/768/1024/1280) so every existing sm:/md:/lg:
+     utility in the app snaps to the same tiers the template actually uses. */
+  --breakpoint-sm: 810px;
+  --breakpoint-md: 1200px;
+  --breakpoint-lg: 1440px;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display), Georgia, serif;
+}
+
+/* --ink (pure black) is opt-in via the `text-ink` utility on headings that
+   sit on a light background, e.g. SectionHeading/Hero titles. It is
+   deliberately NOT a blanket h1-h4 rule: dark-band components (CTASection,
+   Footer) rely on inheriting their light `text-background` color, and a
+   blanket color on the element itself would win over that inheritance and
+   silently break contrast on dark sections. */
