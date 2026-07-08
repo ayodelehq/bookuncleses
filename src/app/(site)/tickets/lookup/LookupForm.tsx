@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { lookupTickets, type LookupState } from "@/app/(site)/tickets/lookup/actions";
+import { SubmitButton } from "@/components/motion/SubmitButton";
 
 const initialState: LookupState = { status: "idle" };
 
@@ -18,13 +19,14 @@ export function LookupForm() {
           required
           className="flex-1 rounded-lg border border-border-subtle bg-background px-4 py-3 text-sm"
         />
-        <button
+        <SubmitButton
           type="submit"
-          disabled={pending}
+          pending={pending}
+          pendingLabel="Looking up..."
           className="rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-foreground disabled:opacity-60"
         >
-          {pending ? "Looking up..." : "Find Tickets"}
-        </button>
+          Find Tickets
+        </SubmitButton>
       </form>
 
       {state.status === "error" ? <p className="mt-4 text-sm text-red-600">{state.message}</p> : null}

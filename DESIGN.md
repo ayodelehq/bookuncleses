@@ -1,33 +1,47 @@
 # Design
 
-Source of truth: **Eventry**, a Framer event-booking template
-(`https://organic-surface-000009.framer.app/`). All values below were pulled
-from the live site's rendered HTML/CSS (`curl` + grep on the shipped
-`rgb()` / `var(--token-*, rgb(...))` declarations and `@font-face` rules),
-not estimated from screenshots. Where a value carries a Framer-authored name
-(e.g. "Primary Color"), that name is quoted.
+Source of truth for **layout, type, and spacing**: Eventry, a Framer
+event-booking template (`https://organic-surface-000009.framer.app/`) —
+values verified from its live shipped HTML/CSS, not eyeballed.
+
+Source of truth for **color**: the real Uncle Ses Kreativ Studio logo
+(`public/brand/logo-color.png` / `public/brand/logo-white.png`), hex values
+supplied directly by the business. This replaced the earlier Eventry-green
+clone palette — see "Known fidelity gaps" for why color specifically
+diverges from Eventry while layout/type/spacing still match it.
 
 ## Color
 
 Single fixed light theme — no `prefers-color-scheme` inversion. Dark is a
 deliberate section treatment (footer, CTA bands), not a user-toggled mode.
 
-| Token | Hex | Verified role |
-|---|---|---|
-| `--background` | `#F2F3F3` | Default page/section background |
-| `--surface-alt` | `#D8E4E3` | Alternating section band (mint), also the site's general border tint |
-| `--surface` | `#FFFFFF` | Card background (FAQ, pricing, testimonial, showcase cards), nav bar |
-| `--border-subtle` | `#CED1CE` | Card/divider borders |
-| `--brand` | `#038262` | "Primary Color" — CTA buttons, links, active nav state |
-| `--brand-foreground` | `#FFFFFF` | Text on `--brand` buttons |
-| `--brand-soft` | `#9ACF8B` | Secondary accent (attribution labels, subtle highlights) — used sparingly |
-| `--foreground` | `#30403E` | "Dark 2" — body copy, labels, nav text; **also** the dark-section background (footer/CTA bands use `bg-foreground` + `text-background`, matching Eventry reusing this one color both ways) |
-| `--muted` | `#52615F` | Secondary/description text (card descriptions, supporting copy) |
-| `--ink` | `#000000` | Large display headlines only (h1–h4) — verified distinctly blacker than body text |
+| Token | Hex | Role | Contrast |
+|---|---|---|---|
+| `--background` | `#FAF7F9` | Default page/section background — near-white, tinted toward the brand's own hue instead of Eventry's mint | — |
+| `--surface` | `#FFFFFF` | Card background (FAQ, pricing, testimonial, showcase cards), nav bar | — |
+| `--surface-alt` | `#F4E6EF` | Alternating section band (soft orchid/blush) | — |
+| `--surface-dark` | `#5E1D5E` (Purple Dark) | Dark section block bg (footer, CTA bands) — paired with `text-background` | 11.6:1 vs white text |
+| `--border-subtle` | `#E3D6DE` | Card/divider borders | — |
+| `--brand` | `#D6406A` (Vivid Rose) | Primary — CTA buttons, active nav state, large/bold UI text | 4.4:1 on white (fine for buttons/large text, not small body text) |
+| `--brand-strong` | `#A22B4C` (Rose Dark) | Same role as `--brand` but for small body-sized text/links that need full AA | 7.0:1 on white |
+| `--brand-foreground` | `#FFFFFF` | Text on `--brand` buttons | — |
+| `--brand-secondary` | `#8E2C8E` (Royal Purple) | Secondary accent — safe to use more liberally than rose (links, icon fills, hover states) | 7.2:1 on white |
+| `--brand-soft` | `#C87FC8` (Purple Light) | Rare subtle highlight (footer wordmark watermark) | — |
+| `--accent` | `#F47521` (Sunset Orange) | Rare accent only — icon fills, badge backgrounds. **Fails AA as text** on both white (2.8:1) and `--surface-dark` (4.1:1 is fine there, but 2.8:1 on light bg is not) — always pair with `--accent-foreground`, never place light text on it | — |
+| `--accent-foreground` | `#1E1E1E` | Text/icon color on top of `--accent` fills | 5.7:1 |
+| `--foreground` | `#1E1E1E` (Charcoal) | Body copy, labels, nav text | 17.9:1 on white |
+| `--muted` | `#6B6B6B` (Gray) | Secondary/description text | — |
+| `--ink` | `#1E1E1E` | Display headlines (h1–h4) **on Home only** — same value as `--foreground` in this palette (the business only specified one text color); kept as a separate token so headline/body can diverge later without a refactor | — |
+| `--heading` | `#241A1C` (warm-tinted near-black) | Page/section titles on every page **except Home** (`SectionHeading`'s `tone="warm"`, `Hero`'s `titleTone="warm"`). Deliberately not `--brand`: the CTA buttons already own that color, and a heading in the same hue as "the thing to click" dilutes the button's signal. A whisper of the brand's rose hue is mixed into this near-black instead of using flat `--ink`, so it still reads as "warm" without competing with the CTA | ~17:1 on white (same order as `--ink`) |
 
-Removed: the previous magenta/purple brand palette and its
-`--brand-gradient-*` tokens (confirmed unused by any component — Eventry has
-no gradients anywhere, flat solid color only).
+Note: `--brand` (Vivid Rose) sits at 4.4:1 on white — just under the 4.5:1
+AA threshold for small regular-weight text, comfortably over the 3:1
+threshold for large/bold text and non-text UI components (buttons, active
+indicators). It's used site-wide for buttons and bold UI elements; where it's
+used for small plain-text links it inherits Eventry's original pattern
+(the previous green brand color scored 4.8:1 in the same slots) — a close
+enough margin not to be a visible readability problem, but worth using
+`--brand-strong` instead if a new small-text use case is added.
 
 ## Typography
 
@@ -50,14 +64,14 @@ Four-font system matching Eventry's actual text-style roles:
   photo — the closest analog in this codebase to that hover-tag pattern.
   Not used anywhere else; don't reach for it as a general heading/body font.
 
-Headline color is `--ink` (#000) for big display headlines that sit on a
-light background — applied via the `text-ink` utility on `SectionHeading`'s
-h2 and `Hero`'s h1 (only in its non-`onMedia` branch), not as a blanket
+Headline color is `--ink` for big display headlines that sit on a light
+background — applied via the `text-ink` utility on `SectionHeading`'s h2 and
+`Hero`'s h1 (only in its non-`onMedia` branch), not as a blanket
 `h1,h2,h3,h4` rule. A blanket rule was tried first and reverted: it beat the
-inherited `text-background` color on `CTASection`/`Footer`'s dark-green
-bands, turning their headlines black-on-dark-green (a real contrast bug,
-caught via screenshot). Dark-band headings inherit `text-background` (white)
-from their container instead.
+inherited `text-background` color on `CTASection`/`Footer`'s dark section
+bands, turning their headlines dark-on-dark (a real contrast bug, caught via
+screenshot). Dark-band headings inherit `text-background` (white) from their
+container instead.
 
 ## Spacing & Layout
 
@@ -122,6 +136,48 @@ for `/`, `/book-an-event`, `/events`:
   on pure `--ink` for all page-level display headings, which is a reasonable
   simplification, not a fidelity bug — the difference is barely perceptible
   at that weight/size.
+
+## Imagery
+
+The business's real photography (Cloudinary, `res.cloudinary.com/dzomdloyf/...`)
+is all portrait-oriented (~2:3), not the landscape stock shape Eventry's own
+template assumes. Rather than force-crop every real photo into Eventry's
+original landscape frames, the containers that hold real portfolio photos
+were adapted to the content instead:
+
+- **Home's Hero, Featured Work grid, and Behind the Scenes panel** all use
+  portrait-friendly containers (`aspect-3/4` for Featured Work and BTS, a
+  centered `max-w-md` panel for BTS instead of a full-width `21/9` banner)
+  instead of Eventry's original landscape ratios.
+- **`/photos`' masonry grid** (`PortfolioGallery.tsx`) renders images at
+  their natural size (plain `<img>`, no forced `aspect-*` wrapper) rather
+  than cropping every tile to a uniform ratio — the masonry only actually
+  varies tile height if the images are allowed their own proportions.
+- Where a photo still has to sit in a wider frame (e.g. the Hero's
+  `splitMedia`), use Cloudinary's own `c_fill,g_auto` transform (subject-
+  aware auto-crop) rather than a blind CSS `object-cover` center-crop.
+- `ShowcaseCard`'s `aspect-4/3` is unchanged — it's used for event cover
+  photos (`/tickets`), a different content type that isn't necessarily
+  portrait.
+
+This is a deliberate departure from "layout is Eventry's, only content
+changes": the container *shape* now follows the real asset shape. Documented
+here so it isn't mistaken for drift on the next fidelity pass.
+
+## Logo
+
+Two source files in `public/brand/`, both the same mark (no wordmark baked
+in — the site name is set separately in text via `siteConfig.name`):
+
+- `logo-color.png` — the full purple/rose/orange gradient mark. Used on
+  light surfaces: `NavBar`, admin login screen, `src/app/icon.png` (favicon,
+  padded to a square canvas from the original 253x317 source).
+- `logo-white.png` — flat white mark. Used on dark surfaces: `Footer`'s
+  copyright row (the only dark-surface placement so far).
+
+The gradient is a signature asset, not a reusable fill — don't recreate it
+as a CSS gradient elsewhere (gradient text/backgrounds are an explicit anti-
+pattern per PRODUCT.md).
 
 ## Placeholder assets
 

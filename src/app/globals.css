@@ -1,34 +1,46 @@
 @import "tailwindcss";
 
-/* Every value below is pulled from Eventry's actual shipped CSS (verified
-   via its live rgb()/var(--token-*) declarations), not eyeballed from
-   screenshots — see DESIGN.md for the source mapping. Eventry is a single
-   fixed light brand with deliberate dark-green section blocks (footer, CTA
-   bands), not a light/dark toggle, so there is no prefers-color-scheme
-   override here. */
+/* Brand palette extracted from the Uncle Ses Kreativ Studio logo
+   (public/brand/logo-color.png): Royal Purple -> Vivid Rose -> Sunset
+   Orange. Layout/type/spacing keep matching Eventry (see DESIGN.md); color
+   is now the site's own identity, not Eventry's green. Single fixed light
+   theme, no prefers-color-scheme override — dark sections (footer, CTA
+   bands) are an authored --surface-dark block, not a toggled mode. */
 :root {
-  --background: #f2f3f3;
-  --foreground: #30403e;
-  --ink: #000000;
+  --background: #faf7f9;
+  --foreground: #1e1e1e;
+  --ink: #1e1e1e;
+  --heading: #241a1c;
   --surface: #ffffff;
-  --surface-alt: #d8e4e3;
-  --border-subtle: #ced1ce;
-  --brand: #038262;
+  --surface-alt: #f4e6ef;
+  --surface-dark: #5e1d5e;
+  --border-subtle: #e3d6de;
+  --brand: #d6406a;
+  --brand-strong: #a22b4c;
   --brand-foreground: #ffffff;
-  --brand-soft: #9acf8b;
-  --muted: #52615f;
+  --brand-secondary: #8e2c8e;
+  --brand-soft: #c87fc8;
+  --accent: #f47521;
+  --accent-foreground: #1e1e1e;
+  --muted: #6b6b6b;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-ink: var(--ink);
+  --color-heading: var(--heading);
   --color-surface: var(--surface);
   --color-surface-alt: var(--surface-alt);
+  --color-surface-dark: var(--surface-dark);
   --color-border-subtle: var(--border-subtle);
   --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
   --color-brand-foreground: var(--brand-foreground);
+  --color-brand-secondary: var(--brand-secondary);
   --color-brand-soft: var(--brand-soft);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
   --color-muted: var(--muted);
   --font-sans: var(--font-body);
   --font-display: var(--font-heading-raw);

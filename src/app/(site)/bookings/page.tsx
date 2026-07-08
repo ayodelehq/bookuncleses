@@ -44,7 +44,7 @@ export default async function BookingsPage() {
     <>
       <section className="pt-35 sm:pt-45 lg:pt-55">
         <Container className="text-center">
-          <h1 className="text-ink text-[40px] font-semibold uppercase leading-[1.05] tracking-[-0.04em] sm:text-[56px] lg:text-[80px]">
+          <h1 className="text-heading text-[40px] font-semibold uppercase leading-[1.05] tracking-[-0.04em] sm:text-[56px] lg:text-[80px]">
             Book an Event
           </h1>
         </Container>
@@ -71,7 +71,7 @@ export default async function BookingsPage() {
       </Section>
 
       <Section className="bg-surface-alt">
-        <SectionHeading title="Get in Touch" />
+        <SectionHeading title="Get in Touch" tone="warm" />
         <div className="mt-10 grid gap-6 sm:grid-cols-3">
           <div className="rounded-2xl border border-border-subtle bg-surface p-6">
             <p className="font-mono text-xs font-medium uppercase tracking-[0.08em] text-muted">Email</p>
@@ -126,7 +126,7 @@ export default async function BookingsPage() {
           </div>
 
           <div>
-            <SectionHeading title="Frequently Asked Questions" align="left" />
+            <SectionHeading title="Frequently Asked Questions" align="left" tone="warm" />
             <div className="mt-8">
               <FAQAccordion items={bookingFaqs} />
             </div>

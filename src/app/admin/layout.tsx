@@ -5,6 +5,7 @@ import { SignOutButton } from "@/components/admin/SignOutButton";
 const adminNav = [
   { label: "Overview", href: "/admin" },
   { label: "Bookings", href: "/admin/bookings" },
+  { label: "Messages", href: "/admin/messages" },
   { label: "Events & Tickets", href: "/admin/events" },
   { label: "Gallery", href: "/admin/gallery" },
   { label: "Rate Card", href: "/admin/rate-card" },

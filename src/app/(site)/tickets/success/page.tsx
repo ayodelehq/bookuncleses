@@ -17,6 +17,7 @@ export default async function TicketSuccessPage({
         title="You're in!"
         description="Your ticket(s) are below and were also emailed to you."
         align="center"
+        titleTone="warm"
       />
 
       <Section>

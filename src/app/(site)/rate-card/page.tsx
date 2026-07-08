@@ -4,8 +4,10 @@ import { Hero } from "@/components/ui/Hero";
 import { Section, SectionHeading } from "@/components/layout/Section";
 import { PricingCard } from "@/components/ui/PricingCard";
 import { FAQAccordion } from "@/components/ui/FAQAccordion";
+import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
 import { getRateCard } from "@/lib/data/rate-card";
 import { formatPrice } from "@/lib/format";
+import { siteConfig } from "@/lib/site-config";
 import type { RateCardCategory } from "@/lib/supabase/types";
 
 const pricingFaqs = [
@@ -48,6 +50,7 @@ export default async function RateCardPage() {
         title="Transparent pricing, no back-and-forth."
         description="Every package below is bookable directly — see what's included, pick a date, and confirm with a deposit."
         primaryCta={{ label: "Check Availability", href: "/bookings" }}
+        titleTone="warm"
       />
 
       {categories.map((category) => {
@@ -56,7 +59,7 @@ export default async function RateCardPage() {
 
         return (
           <Section key={category}>
-            <SectionHeading title={categoryLabels[category]} align="left" />
+            <SectionHeading title={categoryLabels[category]} align="left" tone="warm" />
             <div className="mt-10 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
               {packages.map((pkg, index) => (
                 <PricingCard
@@ -74,7 +77,7 @@ export default async function RateCardPage() {
       })}
 
       <Section className="bg-surface-alt">
-        <SectionHeading title="Extend any package" align="left" />
+        <SectionHeading title="Extend any package" align="left" tone="warm" />
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           {addons.map((addon) => (
             <div
@@ -104,10 +107,45 @@ export default async function RateCardPage() {
         </div>
       </Section>
 
-      <Section className="bg-surface-alt">
-        <SectionHeading title="Frequently Asked Questions" align="left" />
-        <div className="mt-8 max-w-2xl">
-          <FAQAccordion items={pricingFaqs} />
+      <Section>
+        <div className="grid gap-12 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+          <div className="flex min-h-105 flex-col rounded-2xl bg-surface-alt p-8 sm:min-h-130">
+            <MediaPlaceholder kind="image" label="" className="h-16 w-16 rounded-full" />
+            <h3 className="text-ink mt-6 text-2xl font-semibold uppercase tracking-[-0.04em]">Ready to Book?</h3>
+            <p className="mt-3 font-mono text-sm text-muted">
+              Pick a package above, choose your date, and confirm with a deposit — no back-and-forth
+              needed.
+            </p>
+            <Link
+              href="/bookings"
+              className="mt-6 inline-block w-fit rounded-full bg-brand px-6 py-3 text-sm font-semibold text-brand-foreground transition-opacity hover:opacity-90"
+            >
+              Check Availability
+            </Link>
+
+            <div className="mt-auto flex items-center gap-3 pt-10 text-sm">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface text-brand">
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M3 6h18v12H3z" strokeLinejoin="round" />
+                  <path d="m3 6 9 7 9-7" strokeLinejoin="round" />
+                </svg>
+              </span>
+              <span>
+                Have a custom request?
+                <br />
+                <a href={`mailto:${siteConfig.email}`} className="font-mono text-ink hover:text-brand">
+                  {siteConfig.email}
+                </a>
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <SectionHeading title="Frequently Asked Questions" align="left" tone="warm" />
+            <div className="mt-8">
+              <FAQAccordion items={pricingFaqs} />
+            </div>
+          </div>
         </div>
       </Section>
     </>

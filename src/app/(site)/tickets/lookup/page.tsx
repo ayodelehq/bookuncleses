@@ -14,6 +14,7 @@ export default function TicketLookupPage() {
         title="Find your ticket."
         description="Enter the email you used to purchase."
         align="center"
+        titleTone="warm"
       />
       <Section>
         <LookupForm />

@@ -2,7 +2,9 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
+import { motion } from "motion/react";
 import { galleryCategories } from "@/lib/gallery-categories";
+import { ZoomReveal } from "@/components/motion/Reveal";
 import type { GalleryItem } from "@/lib/supabase/types";
 
 export function PortfolioGallery({ items }: { items: GalleryItem[] }) {
@@ -25,32 +27,33 @@ export function PortfolioGallery({ items }: { items: GalleryItem[] }) {
     );
   }
 
+  const tabs = [{ value: "all", label: "All" }, ...galleryCategories];
+
   return (
     <div>
       <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={() => setActiveCategory("all")}
-          className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-            activeCategory === "all" ? "bg-brand text-brand-foreground" : "border border-border-subtle"
-          }`}
-        >
-          All
-        </button>
-        {galleryCategories.map((category) => (
-          <button
-            key={category.value}
-            type="button"
-            onClick={() => setActiveCategory(category.value)}
-            className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-              activeCategory === category.value
-                ? "bg-brand text-brand-foreground"
-                : "border border-border-subtle"
-            }`}
-          >
-            {category.label}
-          </button>
-        ))}
+        {tabs.map((tab) => {
+          const active = activeCategory === tab.value;
+          return (
+            <button
+              key={tab.value}
+              type="button"
+              onClick={() => setActiveCategory(tab.value)}
+              className={`relative rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                active ? "text-brand-foreground" : "border border-border-subtle"
+              }`}
+            >
+              {active ? (
+                <motion.span
+                  layoutId="category-pill"
+                  className="absolute inset-0 rounded-full bg-brand"
+                  transition={{ type: "spring", stiffness: 350, damping: 32 }}
+                />
+              ) : null}
+              <span className="relative">{tab.label}</span>
+            </button>
+          );
+        })}
       </div>
 
       {filtered.length === 0 ? (
@@ -65,15 +68,16 @@ export function PortfolioGallery({ items }: { items: GalleryItem[] }) {
               className="mb-4 block w-full break-inside-avoid overflow-hidden rounded-xl border border-border-subtle bg-surface text-left"
             >
               {item.media_type === "image" ? (
-                <div className="relative aspect-[4/3] w-full">
-                  <Image
+                <ZoomReveal>
+                  {/* eslint-disable-next-line @next/next/no-img-element -- natural aspect ratio is
+                  the point here (masonry grid); Next/Image's `fill` mode would force a crop. */}
+                  <img
                     src={item.url}
                     alt={item.caption ?? "Portfolio photo"}
-                    fill
-                    className="object-cover"
+                    className="block w-full"
                     loading="lazy"
                   />
-                </div>
+                </ZoomReveal>
               ) : (
                 <div className="relative flex aspect-video w-full items-center justify-center bg-foreground/90 text-background">
                   <span className="text-3xl">&#9654;</span>
@@ -105,6 +109,7 @@ export function PortfolioGallery({ items }: { items: GalleryItem[] }) {
                   src={lightboxItem.url}
                   alt={lightboxItem.caption ?? "Portfolio photo"}
                   fill
+                  sizes="90vw"
                   className="object-contain"
                 />
               </div>

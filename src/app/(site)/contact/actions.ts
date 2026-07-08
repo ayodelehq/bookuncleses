@@ -22,9 +22,14 @@ export async function submitContactForm(
 
   try {
     const supabase = createServiceRoleClient();
-    await supabase.from("contact_messages").insert({ name, email, message });
+    const { error } = await supabase.from("contact_messages").insert({ name, email, message });
+    if (error) throw error;
   } catch (error) {
     console.error("Failed to store contact message", error);
+    return {
+      status: "error",
+      message: "Something went wrong sending your message. Please try again, or reach out on WhatsApp.",
+    };
   }
 
   try {

@@ -15,7 +15,7 @@ export default async function AdminOverviewPage() {
   const cards = [
     { label: "Pending Bookings", value: pendingBookings ?? 0, href: "/admin/bookings" },
     { label: "Published Events", value: upcomingEvents ?? 0, href: "/admin/events" },
-    { label: "Contact Messages", value: messages ?? 0, href: "/admin/bookings" },
+    { label: "Contact Messages", value: messages ?? 0, href: "/admin/messages" },
   ];
 
   return (

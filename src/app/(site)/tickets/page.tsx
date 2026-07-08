@@ -19,6 +19,7 @@ export default async function TicketsPage() {
         title="Events we host ourselves."
         description="Styled shoot days, vendor mixers, workshops, and exhibitions — grab a ticket before they sell out."
         secondaryCta={{ label: "Look Up My Ticket", href: "/tickets/lookup" }}
+        titleTone="warm"
       />
 
       <Section>

@@ -18,6 +18,7 @@ export default async function PhotosPage() {
         title="See the work before you book."
         description="A look at past weddings, corporate coverage, portraits, and the events we've hosted ourselves."
         primaryCta={{ label: "Check Availability", href: "/bookings" }}
+        titleTone="warm"
       />
 
       <Section>

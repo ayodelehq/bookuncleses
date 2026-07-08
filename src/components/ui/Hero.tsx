@@ -1,6 +1,12 @@
+"use client";
+
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { motion, useReducedMotion } from "motion/react";
 import { Container } from "@/components/layout/Container";
+import { HeroImageStack } from "@/components/ui/HeroImageStack";
+
+const easeOut = [0.16, 1, 0.3, 1] as const;
 
 export function Hero({
   title,
@@ -8,19 +14,99 @@ export function Hero({
   primaryCta,
   secondaryCta,
   media,
+  splitMedia,
+  stackImages,
   align = "left",
   topNote,
+  titleTone = "ink",
 }: {
   title: string;
   description?: string;
   primaryCta?: { label: string; href: string };
   secondaryCta?: { label: string; href: string };
+  /** Full-bleed background media behind the whole hero (dark scrim + white text). */
   media?: ReactNode;
+  /** A tall portrait-shaped panel next to the text instead of a full-bleed background — for a single strong portrait photo that shouldn't be cropped into a wide frame. */
+  splitMedia?: ReactNode;
+  /** An irregular, continuously-cycling stack of photos next to the text, with a caption that changes in sync. Takes priority over `splitMedia` when both are given. */
+  stackImages?: { src: string; caption?: string | null }[];
   align?: "left" | "center";
-  /** Short blurb pinned to the top-right of a photo hero, next to the wordmark. */
+  /** Short blurb — pinned top-right next to the wordmark on a `media` hero, rendered as a caption under the photo on a `splitMedia` hero. Ignored on a `stackImages` hero (the cycling caption takes its place). */
   topNote?: string;
+  /** `ink` (default, used by Home) or `warm` — the warm-tinted near-black every other page's hero title uses, distinct from the brand rose so it doesn't compete with CTA buttons. Ignored on a `media` hero (always white for contrast on the photo scrim). */
+  titleTone?: "ink" | "warm";
 }) {
   const onMedia = Boolean(media);
+  const onStack = Boolean(stackImages && stackImages.length > 0);
+  const onSplit = Boolean(splitMedia) || onStack;
+  const reduceMotion = useReducedMotion();
+
+  const entrance = {
+    initial: { opacity: 0, y: reduceMotion ? 0 : 28 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.7, ease: easeOut },
+  };
+  const headingScale = {
+    initial: { scale: reduceMotion ? 1 : 0.94 },
+    animate: { scale: 1 },
+    transition: { duration: 0.8, delay: 0.1, ease: easeOut },
+  };
+
+  if (onSplit) {
+    return (
+      <div className="relative overflow-hidden border-b border-border-subtle">
+        <Container className="grid gap-10 pt-35 pb-15 sm:grid-cols-2 sm:items-center sm:gap-12 sm:pt-45 sm:pb-25 lg:gap-16 lg:pt-55 lg:pb-31">
+          <motion.div className="max-w-xl" {...entrance}>
+            <motion.h1
+              className={`origin-left text-[40px] font-semibold leading-[1.05] tracking-[-0.04em] sm:text-[48px] lg:text-[64px] ${
+                titleTone === "warm" ? "text-heading" : "text-ink"
+              }`}
+              {...headingScale}
+            >
+              {title}
+            </motion.h1>
+            {description ? <p className="mt-6 text-lg leading-[1.4] text-muted">{description}</p> : null}
+
+            {(primaryCta || secondaryCta) && (
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                {primaryCta ? (
+                  <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                    <Link
+                      href={primaryCta.href}
+                      className="inline-block rounded-full bg-brand px-8 py-4 text-sm font-semibold text-brand-foreground transition-opacity hover:opacity-90"
+                    >
+                      {primaryCta.label}
+                    </Link>
+                  </motion.div>
+                ) : null}
+                {secondaryCta ? (
+                  <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                    <Link
+                      href={secondaryCta.href}
+                      className="inline-block rounded-full border border-border-subtle px-8 py-4 text-sm font-semibold transition-colors hover:border-brand hover:text-brand"
+                    >
+                      {secondaryCta.label}
+                    </Link>
+                  </motion.div>
+                ) : null}
+              </div>
+            )}
+          </motion.div>
+
+          <motion.div {...entrance} transition={{ ...entrance.transition, delay: 0.15 }}>
+            {onStack ? (
+              <HeroImageStack images={stackImages ?? []} />
+            ) : (
+              <>
+                <div className="relative aspect-3/4 w-full overflow-hidden rounded-3xl">{splitMedia}</div>
+                {topNote ? <p className="mt-3 font-mono text-xs text-muted">{topNote}</p> : null}
+              </>
+            )}
+          </motion.div>
+        </Container>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -37,7 +123,14 @@ export function Hero({
 
       {onMedia && topNote ? (
         <Container className="relative pt-10">
-          <p className="ml-auto max-w-xs text-right text-sm leading-[1.4] text-white/90">{topNote}</p>
+          <motion.p
+            className="ml-auto max-w-xs text-right text-sm leading-[1.4] text-white/90"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            {topNote}
+          </motion.p>
         </Container>
       ) : null}
 
@@ -48,18 +141,20 @@ export function Hero({
             : "pt-35 pb-15 sm:pt-45 sm:pb-25 lg:pt-55 lg:pb-31"
         }
       >
-        <div
+        <motion.div
           className={`max-w-2xl ${align === "center" ? "mx-auto text-center" : "text-left"} ${
             onMedia ? "text-white" : ""
           }`}
+          {...entrance}
         >
-          <h1
-            className={`text-[40px] font-semibold leading-[1.05] tracking-[-0.04em] sm:text-[56px] lg:text-[80px] ${
-              onMedia ? "text-white" : "text-ink"
-            }`}
+          <motion.h1
+            className={`origin-left text-[40px] font-semibold leading-[1.05] tracking-[-0.04em] sm:text-[56px] lg:text-[80px] ${
+              onMedia ? "text-white" : titleTone === "warm" ? "text-heading" : "text-ink"
+            } ${align === "center" ? "origin-center" : ""}`}
+            {...headingScale}
           >
             {title}
-          </h1>
+          </motion.h1>
           {description ? (
             <p className={`mt-6 text-lg leading-[1.4] ${onMedia ? "text-white/85" : "text-muted"}`}>
               {description}
@@ -69,28 +164,32 @@ export function Hero({
           {(primaryCta || secondaryCta) && (
             <div className={`mt-8 flex flex-wrap items-center gap-4 ${align === "center" ? "justify-center" : ""}`}>
               {primaryCta ? (
-                <Link
-                  href={primaryCta.href}
-                  className="rounded-full bg-brand px-8 py-4 text-sm font-semibold text-brand-foreground transition-opacity hover:opacity-90"
-                >
-                  {primaryCta.label}
-                </Link>
+                <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                  <Link
+                    href={primaryCta.href}
+                    className="inline-block rounded-full bg-brand px-8 py-4 text-sm font-semibold text-brand-foreground transition-opacity hover:opacity-90"
+                  >
+                    {primaryCta.label}
+                  </Link>
+                </motion.div>
               ) : null}
               {secondaryCta ? (
-                <Link
-                  href={secondaryCta.href}
-                  className={`rounded-full border px-8 py-4 text-sm font-semibold transition-colors ${
-                    onMedia
-                      ? "border-white/40 text-white hover:border-white"
-                      : "border-border-subtle hover:border-brand hover:text-brand"
-                  }`}
-                >
-                  {secondaryCta.label}
-                </Link>
+                <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                  <Link
+                    href={secondaryCta.href}
+                    className={`inline-block rounded-full border px-8 py-4 text-sm font-semibold transition-colors ${
+                      onMedia
+                        ? "border-white/40 text-white hover:border-white"
+                        : "border-border-subtle hover:border-brand hover:text-brand"
+                    }`}
+                  >
+                    {secondaryCta.label}
+                  </Link>
+                </motion.div>
               ) : null}
             </div>
           )}
-        </div>
+        </motion.div>
       </Container>
     </div>
   );

@@ -5,11 +5,13 @@ import { useActionState } from "react";
 import { startTicketCheckout, type StartCheckoutState } from "@/app/(site)/tickets/[slug]/actions";
 import type { TicketTier } from "@/lib/supabase/types";
 import { formatPrice } from "@/lib/format";
+import { SubmitButton } from "@/components/motion/SubmitButton";
 
 const initialState: StartCheckoutState = { status: "idle" };
 
 export function TicketPurchaseForm({ eventId, tiers }: { eventId: string; tiers: TicketTier[] }) {
   const [selectedTierId, setSelectedTierId] = useState(tiers[0]?.id ?? "");
+  const [clickedProvider, setClickedProvider] = useState<"paystack" | "flutterwave" | null>(null);
   const [state, formAction, pending] = useActionState(startTicketCheckout, initialState);
 
   useEffect(() => {
@@ -100,24 +102,31 @@ export function TicketPurchaseForm({ eventId, tiers }: { eventId: string; tiers:
       </div>
 
       <div className="flex flex-col gap-2 sm:flex-row">
-        <button
+        <SubmitButton
           type="submit"
           name="provider"
           value="paystack"
+          onClick={() => setClickedProvider("paystack")}
           disabled={pending}
+          pending={pending && clickedProvider === "paystack"}
+          pendingLabel="Redirecting..."
           className="flex-1 rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-foreground disabled:opacity-60"
         >
           Pay with Paystack
-        </button>
-        <button
+        </SubmitButton>
+        <SubmitButton
           type="submit"
           name="provider"
           value="flutterwave"
+          onClick={() => setClickedProvider("flutterwave")}
           disabled={pending}
+          pending={pending && clickedProvider === "flutterwave"}
+          pendingLabel="Redirecting..."
+          light={false}
           className="flex-1 rounded-full border border-border-subtle px-5 py-3 text-sm font-semibold disabled:opacity-60"
         >
           Pay with Flutterwave
-        </button>
+        </SubmitButton>
       </div>
 
       {state.status === "error" ? <p className="text-sm text-red-600">{state.message}</p> : null}

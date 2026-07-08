@@ -15,6 +15,7 @@ export default function ContactPage() {
       <Hero
         title="Let's talk about your event."
         description="Have a question that doesn't fit a booking yet? Send a message, chat on WhatsApp, or reach us directly."
+        titleTone="warm"
       />
 
       <Section>

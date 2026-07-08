@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { submitContactForm, type ContactFormState } from "@/app/(site)/contact/actions";
+import { SubmitButton } from "@/components/motion/SubmitButton";
 
 const initialState: ContactFormState = { status: "idle" };
 
@@ -48,13 +49,14 @@ export function ContactForm() {
         />
       </div>
 
-      <button
+      <SubmitButton
         type="submit"
-        disabled={pending}
+        pending={pending}
+        pendingLabel="Sending..."
         className="rounded-full bg-brand px-6 py-3 text-sm font-semibold text-brand-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
       >
-        {pending ? "Sending..." : "Send Message"}
-      </button>
+        Send Message
+      </SubmitButton>
 
       {state.status !== "idle" ? (
         <p className={`text-sm ${state.status === "success" ? "text-brand" : "text-red-600"}`}>

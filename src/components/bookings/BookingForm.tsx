@@ -1,10 +1,12 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
+import { motion } from "motion/react";
 import { startBookingCheckout, type StartBookingCheckoutState } from "@/app/(site)/bookings/actions";
 import { AvailabilityCalendar } from "@/components/bookings/AvailabilityCalendar";
 import { bookingDepositNaira, bookingServiceOptions } from "@/lib/site-config";
 import { formatPrice } from "@/lib/format";
+import { SubmitButton } from "@/components/motion/SubmitButton";
 
 const initialState: StartBookingCheckoutState = { status: "idle" };
 
@@ -12,6 +14,7 @@ export function BookingForm({ blockedDates }: { blockedDates: string[] }) {
   const [state, formAction, pending] = useActionState(startBookingCheckout, initialState);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [paymentOpen, setPaymentOpen] = useState(false);
+  const [clickedProvider, setClickedProvider] = useState<"paystack" | "flutterwave" | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
@@ -149,15 +152,17 @@ export function BookingForm({ blockedDates }: { blockedDates: string[] }) {
         A <strong>{formatPrice(bookingDepositNaira)}</strong> deposit confirms and reserves your date.
       </div>
 
-      <button
+      <motion.button
         type="button"
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.97 }}
         onClick={() => {
           if (formRef.current?.reportValidity()) setPaymentOpen(true);
         }}
         className="rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-foreground transition-opacity hover:opacity-90"
       >
         Continue to Payment
-      </button>
+      </motion.button>
 
       {state.status === "error" ? <p className="text-sm text-red-600">{state.message}</p> : null}
 
@@ -172,24 +177,31 @@ export function BookingForm({ blockedDates }: { blockedDates: string[] }) {
               Both options securely collect your {formatPrice(bookingDepositNaira)} deposit.
             </p>
             <div className="mt-5 flex flex-col gap-3">
-              <button
+              <SubmitButton
                 type="submit"
                 name="provider"
                 value="paystack"
+                onClick={() => setClickedProvider("paystack")}
                 disabled={pending}
+                pending={pending && clickedProvider === "paystack"}
+                pendingLabel="Redirecting..."
                 className="rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-foreground disabled:opacity-60"
               >
                 Pay Deposit with Paystack
-              </button>
-              <button
+              </SubmitButton>
+              <SubmitButton
                 type="submit"
                 name="provider"
                 value="flutterwave"
+                onClick={() => setClickedProvider("flutterwave")}
                 disabled={pending}
+                pending={pending && clickedProvider === "flutterwave"}
+                pendingLabel="Redirecting..."
+                light={false}
                 className="rounded-full border border-border-subtle px-5 py-3 text-sm font-semibold disabled:opacity-60"
               >
                 Pay Deposit with Flutterwave
-              </button>
+              </SubmitButton>
             </div>
             <button
               type="button"

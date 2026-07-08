@@ -9,6 +9,7 @@ export default function BookingSuccessPage() {
         title="Your date is reserved!"
         description="We've received your deposit and sent a confirmation to your email. We'll be in touch about next steps."
         align="center"
+        titleTone="warm"
       />
       <Section>
         <p className="text-center text-sm text-muted">

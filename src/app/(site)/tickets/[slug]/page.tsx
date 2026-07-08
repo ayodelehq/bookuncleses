@@ -39,12 +39,19 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
           day: "numeric",
           year: "numeric",
         })} · ${event.venue}`}
+        titleTone="warm"
       />
 
       <Container className="pt-10">
         <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl">
           {event.cover_image_url ? (
-            <Image src={event.cover_image_url} alt={event.title} fill className="object-cover" />
+            <Image
+              src={event.cover_image_url}
+              alt={event.title}
+              fill
+              sizes="(min-width: 810px) 1200px, 100vw"
+              className="object-cover"
+            />
           ) : (
             <MediaPlaceholder kind="image" label="Event cover image required" fill />
           )}
@@ -66,7 +73,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
 
       {moreEvents.length > 0 ? (
         <Section className="bg-surface-alt">
-          <SectionHeading title="More Events" align="left" />
+          <SectionHeading title="More Events" align="left" tone="warm" />
           <div className="mt-10 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
             {moreEvents.map((item) => (
               <ShowcaseCard
@@ -87,7 +94,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
         </Section>
       ) : null}
 
-      <Section className="bg-foreground text-background">
+      <Section className="bg-surface-dark text-background">
         <div className="flex flex-col items-center gap-4 text-center">
           <h2 className="text-[30px] font-semibold leading-[1.1] tracking-[-0.04em] sm:text-[34px] md:text-[40px]">
             Have a question before you buy?

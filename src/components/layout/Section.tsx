@@ -23,20 +23,25 @@ export function Section({
   );
 }
 
-const headingClass =
-  "text-ink text-balance text-[40px] font-semibold uppercase leading-[0.95] tracking-[-0.04em] sm:text-[56px] lg:text-[72px]";
+const headingBase =
+  "text-balance text-[40px] font-semibold uppercase leading-[0.95] tracking-[-0.04em] sm:text-[56px] lg:text-[72px]";
 
 export function SectionHeading({
   title,
   description,
   align = "center",
   cta,
+  tone = "ink",
 }: {
   title: ReactNode;
   description?: ReactNode;
   align?: "center" | "left" | "split";
   cta?: { label: string; href: string };
+  /** `ink` (default) matches Home's headings; `warm` is the warm-tinted near-black used on every other page — deliberately not the brand rose, so titles don't compete with CTA buttons for the same color. */
+  tone?: "ink" | "warm";
 }) {
+  const headingClass = `${tone === "warm" ? "text-heading" : "text-ink"} ${headingBase}`;
+
   if (align === "split") {
     return (
       <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">

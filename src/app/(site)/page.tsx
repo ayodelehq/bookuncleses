@@ -8,6 +8,7 @@ import { PricingCard } from "@/components/ui/PricingCard";
 import { FAQAccordion } from "@/components/ui/FAQAccordion";
 import { CTASection } from "@/components/ui/CTASection";
 import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
+import { Reveal, RevealGroup, RevealItem, ZoomReveal } from "@/components/motion/Reveal";
 import { getGalleryItems } from "@/lib/data/gallery";
 import { getTestimonials } from "@/lib/data/testimonials";
 import { getPublishedEvents } from "@/lib/data/events";
@@ -15,6 +16,13 @@ import { getRateCard } from "@/lib/data/rate-card";
 import { formatPrice } from "@/lib/format";
 import { bookingDepositNaira, siteConfig } from "@/lib/site-config";
 import type { RateCardCategory } from "@/lib/supabase/types";
+
+const heroPhrases = [
+  "Trusted for weddings, corporate events, and private celebrations.",
+  "Every frame planned, every moment captured.",
+  "From intimate gatherings to full-scale productions.",
+  "Photography, videography, and hosting — all in one place.",
+];
 
 const homeFaqs = [
   {
@@ -44,8 +52,12 @@ export default async function HomePage() {
     getRateCard(),
   ]);
 
-  const featuredWork = gallery.filter((item) => item.media_type === "image").slice(0, 2);
-  const btsPhoto = gallery.filter((item) => item.media_type === "image")[2];
+  const galleryPhotos = gallery.filter((item) => item.media_type === "image");
+  const featuredWork = galleryPhotos.slice(0, 2);
+  const btsPhoto = galleryPhotos[2];
+  const heroStack = galleryPhotos
+    .slice(3, 7)
+    .map((item, index) => ({ src: item.url, caption: heroPhrases[index % heroPhrases.length] }));
   const upcomingEvents = events.slice(0, 3);
 
   const pricingPicks = rateCardHighlights
@@ -62,8 +74,7 @@ export default async function HomePage() {
         description={siteConfig.description}
         primaryCta={{ label: "Check Availability", href: "/bookings" }}
         secondaryCta={{ label: "View Portfolio", href: "/photos" }}
-        media={<MediaPlaceholder kind="image" label="Hero image required" fill />}
-        topNote="Trusted for weddings, corporate events, and private celebrations."
+        stackImages={heroStack}
       />
 
       <Section>
@@ -71,7 +82,7 @@ export default async function HomePage() {
           align="split"
           title={
             <>
-              <span className="text-foreground">Featured</span> Work
+              <span className="text-brand">Featured</span> Work
             </>
           }
           description="Recent shoots and productions we've delivered."
@@ -81,10 +92,18 @@ export default async function HomePage() {
           {[0, 1].map((slot) => {
             const item = featuredWork[slot];
             return (
-              <div key={slot} className="group relative aspect-[4/3] overflow-hidden rounded-2xl">
+              <div key={slot} className="group relative aspect-3/4 overflow-hidden rounded-2xl">
                 {item ? (
                   <>
-                    <Image src={item.url} alt={item.caption ?? "Featured work"} fill className="object-cover" />
+                    <ZoomReveal className="absolute inset-0">
+                      <Image
+                        src={item.url}
+                        alt={item.caption ?? "Featured work"}
+                        fill
+                        sizes="(min-width: 810px) 50vw, 100vw"
+                        className="object-cover"
+                      />
+                    </ZoomReveal>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0" />
                     {item.caption ? (
                       <span className="font-accent absolute bottom-6 left-6 rounded-full bg-black/40 px-3 py-1 text-sm font-medium text-white opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100">
@@ -106,14 +125,22 @@ export default async function HomePage() {
           align="split"
           title={
             <>
-              <span className="text-foreground">Behind</span> the Scenes
+              <span className="text-brand">Behind</span> the Scenes
             </>
           }
           description="A glimpse into how we bring each event to life."
         />
-        <div className="relative mt-10 aspect-[21/9] overflow-hidden rounded-2xl">
+        <div className="relative mx-auto mt-10 aspect-3/4 max-w-md overflow-hidden rounded-2xl">
           {btsPhoto ? (
-            <Image src={btsPhoto.url} alt={btsPhoto.caption ?? "Behind the scenes"} fill className="object-cover" />
+            <ZoomReveal className="absolute inset-0">
+              <Image
+                src={btsPhoto.url}
+                alt={btsPhoto.caption ?? "Behind the scenes"}
+                fill
+                sizes="(min-width: 810px) 448px, 100vw"
+                className="object-cover"
+              />
+            </ZoomReveal>
           ) : (
             <MediaPlaceholder kind="image" label="Behind-the-scenes photo required" fill />
           )}
@@ -126,22 +153,23 @@ export default async function HomePage() {
             align="split"
             title={
               <>
-                <span className="text-foreground">Client</span> Feedback
+                <span className="text-brand">Client</span> Feedback
               </>
             }
             description="Real words from the people we've worked with."
           />
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+          <RevealGroup className="mt-10 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
             {testimonials.slice(0, 3).map((testimonial, index) => (
-              <TestimonialCard
-                key={testimonial.id}
-                name={testimonial.name}
-                quote={testimonial.quote}
-                eventType={testimonial.event_type}
-                featured={index === 1}
-              />
+              <RevealItem key={testimonial.id}>
+                <TestimonialCard
+                  name={testimonial.name}
+                  quote={testimonial.quote}
+                  eventType={testimonial.event_type}
+                  featured={index === 1}
+                />
+              </RevealItem>
             ))}
-          </div>
+          </RevealGroup>
         </Section>
       ) : null}
 
@@ -151,30 +179,31 @@ export default async function HomePage() {
             align="split"
             title={
               <>
-                <span className="text-foreground">Simple</span> Pricing
+                <span className="text-brand">Simple</span> Pricing
               </>
             }
             description="Transparent packages across photography, videography, and hosting."
             cta={{ label: "View Full Rate Card", href: "/rate-card" }}
           />
-          <div className="mt-10 grid gap-6 sm:grid-cols-3">
+          <RevealGroup className="mt-10 grid gap-6 sm:grid-cols-3">
             {pricingPicks.map((pkg, index) => (
-              <PricingCard
-                key={pkg.id}
-                name={pkg.package_name}
-                price={formatPrice(pkg.price)}
-                duration={pkg.duration}
-                description={pkg.description}
-                featured={index === 1}
-              />
+              <RevealItem key={pkg.id}>
+                <PricingCard
+                  name={pkg.package_name}
+                  price={formatPrice(pkg.price)}
+                  duration={pkg.duration}
+                  description={pkg.description}
+                  featured={index === 1}
+                />
+              </RevealItem>
             ))}
-          </div>
+          </RevealGroup>
         </Section>
       ) : null}
 
       <Section>
         <div className="grid gap-12 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
-          <div className="flex min-h-105 flex-col rounded-2xl bg-surface-alt p-8 sm:min-h-130">
+          <Reveal className="flex min-h-105 flex-col rounded-2xl bg-surface-alt p-8 sm:min-h-130">
             <MediaPlaceholder kind="image" label="" className="h-16 w-16 rounded-full" />
             <h3 className="text-ink mt-6 text-2xl font-semibold uppercase tracking-[-0.04em]">Book an Event</h3>
             <p className="mt-3 font-mono text-sm text-muted">
@@ -203,14 +232,14 @@ export default async function HomePage() {
                 </a>
               </span>
             </div>
-          </div>
+          </Reveal>
 
-          <div>
+          <Reveal delay={0.15}>
             <SectionHeading title="Frequently Asked Questions" align="left" />
             <div className="mt-8">
               <FAQAccordion items={homeFaqs} />
             </div>
-          </div>
+          </Reveal>
         </div>
       </Section>
 
@@ -220,29 +249,30 @@ export default async function HomePage() {
             align="split"
             title={
               <>
-                <span className="text-foreground">Upcoming</span> Events
+                <span className="text-brand">Upcoming</span> Events
               </>
             }
             description="See what we're hosting next and grab a spot."
             cta={{ label: "See All Events", href: "/tickets" }}
           />
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+          <RevealGroup className="mt-10 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
             {upcomingEvents.map((event) => (
-              <ShowcaseCard
-                key={event.id}
-                href={`/tickets/${event.slug}`}
-                image={event.cover_image_url ?? undefined}
-                title={event.title}
-                meta={new Date(event.event_date).toLocaleDateString("en-NG", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-                description={event.venue}
-                cta="Get Tickets"
-              />
+              <RevealItem key={event.id}>
+                <ShowcaseCard
+                  href={`/tickets/${event.slug}`}
+                  image={event.cover_image_url ?? undefined}
+                  title={event.title}
+                  meta={new Date(event.event_date).toLocaleDateString("en-NG", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                  description={event.venue}
+                  cta="Get Tickets"
+                />
+              </RevealItem>
             ))}
-          </div>
+          </RevealGroup>
         </Section>
       ) : null}
 
