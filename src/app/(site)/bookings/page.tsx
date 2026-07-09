@@ -10,7 +10,7 @@ import { formatPrice } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Book an Event — Bookuncleses",
-  description: "Reserve your date for photography, videography, or event hosting with a deposit.",
+  description: "Reserve your date for photography, video, event hosting, venue planning, or comedy with a deposit.",
 };
 
 const bookingFaqs = [

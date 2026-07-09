@@ -88,7 +88,7 @@ export function FooterContent({ upcomingCount }: { upcomingCount: number }) {
                 </Link>
               </div>
               <p className="flex min-h-55 flex-col justify-end px-6 py-6 font-mono text-sm font-bold text-background/70">
-                Reserve your date for photography, videography, or hosting.
+                Reserve your date for photography, video, hosting, and more.
               </p>
             </div>
             <div className="flex flex-col">

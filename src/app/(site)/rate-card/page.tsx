@@ -30,19 +30,29 @@ const pricingFaqs = [
 
 export const metadata: Metadata = {
   title: "Rate Card — Bookuncleses",
-  description: "Transparent pricing for photography, videography, and event hosting packages.",
+  description: "Transparent pricing for photography, video, event hosting, venue planning, and comedy packages.",
 };
 
 const categoryLabels: Record<RateCardCategory, string> = {
   photography: "Photography",
-  videography: "Videography",
+  videography: "Video Coverage & Content Creation",
   event_hosting: "Event Hosting & MC",
+  stand_up_comedy: "Stand-up Comedy",
+  hype_man: "Hype Man",
+  event_planning: "Event Planning",
 };
 
 export default async function RateCardPage() {
   const { items, addons } = await getRateCard();
 
-  const categories: RateCardCategory[] = ["photography", "videography", "event_hosting"];
+  const categories: RateCardCategory[] = [
+    "photography",
+    "videography",
+    "event_hosting",
+    "stand_up_comedy",
+    "hype_man",
+    "event_planning",
+  ];
 
   return (
     <>
@@ -58,7 +68,7 @@ export default async function RateCardPage() {
         if (packages.length === 0) return null;
 
         return (
-          <Section key={category}>
+          <Section key={category} id={category}>
             <SectionHeading title={categoryLabels[category]} align="left" tone="warm" />
             <div className="mt-10 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
               {packages.map((pkg, index) => (

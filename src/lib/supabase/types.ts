@@ -1,11 +1,36 @@
-export type BookingServiceType = "photography" | "videography" | "event_hosting" | "full_package";
+export type BookingServiceType =
+  | "photography"
+  | "videography"
+  | "event_hosting"
+  | "event_planning"
+  | "stand_up_comedy"
+  | "hype_man"
+  | "full_package";
 export type BookingStatus = "pending" | "deposit_paid" | "confirmed" | "cancelled";
 export type PaymentProvider = "paystack" | "flutterwave";
 export type EventStatus = "draft" | "published";
 export type OrderStatus = "pending" | "paid" | "cancelled";
 export type GalleryCategory = "weddings" | "corporate" | "portraits" | "hosted_events";
 export type GalleryMediaType = "image" | "video_embed";
-export type RateCardCategory = "photography" | "videography" | "event_hosting";
+export type RateCardCategory =
+  | "photography"
+  | "videography"
+  | "event_hosting"
+  | "event_planning"
+  | "stand_up_comedy"
+  | "hype_man";
+export type ServiceKind = "bookable" | "quote" | "teaser";
+export type ServiceCategory = "entertainment" | "creative" | "event";
+export type ServiceIconKey =
+  | "microphone"
+  | "spotlight"
+  | "bolt"
+  | "star"
+  | "ticket"
+  | "camera"
+  | "video"
+  | "megaphone"
+  | "calendar";
 
 export interface Booking {
   id: string;
@@ -91,6 +116,19 @@ export interface Addon {
   id: string;
   name: string;
   price: number | null;
+  sort_order: number;
+}
+
+export interface Service {
+  id: string;
+  kind: ServiceKind;
+  category: ServiceCategory;
+  icon: ServiceIconKey;
+  title: string;
+  description: string;
+  badge: string | null;
+  cta_label: string;
+  cta_href: string;
   sort_order: number;
 }
 

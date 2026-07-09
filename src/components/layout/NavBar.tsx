@@ -115,25 +115,27 @@ export function NavBar() {
               </Link>
             </motion.div>
 
-            <button
+            <motion.button
               type="button"
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
-              className="relative inline-flex h-9 w-9 items-center justify-center sm:hidden"
+              whileTap={{ scale: 0.94 }}
+              className="relative inline-flex h-10 w-10 items-center justify-center rounded-full bg-brand sm:hidden"
               onClick={() => setOpen((v) => !v)}
             >
-              <span
-                className={`absolute h-0.5 w-6 bg-foreground transition-transform ${
-                  open ? "rotate-45" : "-translate-y-2"
-                }`}
-              />
-              <span className={`absolute h-0.5 w-6 bg-foreground transition-opacity ${open ? "opacity-0" : ""}`} />
-              <span
-                className={`absolute h-0.5 w-6 bg-foreground transition-transform ${
-                  open ? "-rotate-45" : "translate-y-2"
-                }`}
-              />
-            </button>
+              <span className="relative flex h-4 w-5 flex-col justify-between">
+                <span
+                  className={`h-0.5 w-5 rounded-full bg-brand-foreground transition-transform duration-300 ${
+                    open ? "translate-y-1.75 rotate-45" : ""
+                  }`}
+                />
+                <span
+                  className={`h-0.5 self-end rounded-full bg-brand-foreground transition-all duration-300 ${
+                    open ? "w-5 -translate-y-1.75 -rotate-45" : "w-3.5"
+                  }`}
+                />
+              </span>
+            </motion.button>
           </div>
 
           <AnimatePresence>

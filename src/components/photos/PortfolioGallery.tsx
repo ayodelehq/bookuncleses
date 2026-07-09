@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import { motion } from "motion/react";
 import { galleryCategories } from "@/lib/gallery-categories";
+import { getCloudinaryVideoThumbnail, isDirectVideoUrl } from "@/lib/media";
 import { ZoomReveal } from "@/components/motion/Reveal";
 import type { GalleryItem } from "@/lib/supabase/types";
 
@@ -79,8 +80,20 @@ export function PortfolioGallery({ items }: { items: GalleryItem[] }) {
                   />
                 </ZoomReveal>
               ) : (
-                <div className="relative flex aspect-video w-full items-center justify-center bg-foreground/90 text-background">
-                  <span className="text-3xl">&#9654;</span>
+                <div className="relative aspect-video w-full overflow-hidden bg-foreground/90 text-background">
+                  {getCloudinaryVideoThumbnail(item.url) ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- Cloudinary-generated
+                    // thumbnail, not a Next/Image-managed asset
+                    <img
+                      src={getCloudinaryVideoThumbnail(item.url) ?? undefined}
+                      alt={item.caption ?? "Video preview"}
+                      className="absolute inset-0 h-full w-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : null}
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                    <span className="text-3xl">&#9654;</span>
+                  </div>
                 </div>
               )}
               {item.caption ? <p className="p-3 text-sm text-muted">{item.caption}</p> : null}
@@ -113,6 +126,13 @@ export function PortfolioGallery({ items }: { items: GalleryItem[] }) {
                   className="object-contain"
                 />
               </div>
+            ) : isDirectVideoUrl(lightboxItem.url) ? (
+              <video
+                src={lightboxItem.url}
+                controls
+                autoPlay
+                className="aspect-video w-[90vw] max-w-4xl bg-black"
+              />
             ) : (
               <iframe
                 title={lightboxItem.caption ?? "Video"}

@@ -2,7 +2,7 @@ export const siteConfig = {
   name: "Bookuncleses",
   tagline: "Every Moment, Beautifully Booked.",
   description:
-    "Photography & videography, event hosting, and venue planning — browse the portfolio, check pricing, and book directly.",
+    "Photography, video & content creation, event hosting, venue planning, stand-up comedy, and brand promotion — browse the portfolio, check pricing, and book directly.",
   whatsappNumber: "2340000000000",
   email: "hello@bookuncleses.com",
   phone: "+234 000 000 0000",
@@ -17,8 +17,11 @@ export const bookingDepositNaira = 20000;
 
 export const bookingServiceOptions = [
   { value: "photography", label: "Photography" },
-  { value: "videography", label: "Videography" },
+  { value: "videography", label: "Video Coverage & Content Creation" },
   { value: "event_hosting", label: "Event Hosting" },
+  { value: "stand_up_comedy", label: "Stand-up Comedy" },
+  { value: "hype_man", label: "Hype Man" },
+  { value: "event_planning", label: "Event Planning" },
   { value: "full_package", label: "Full Package" },
 ] as const;
 

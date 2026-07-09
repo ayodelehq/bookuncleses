@@ -2,6 +2,7 @@ import { requireAdminUser } from "@/lib/auth/admin";
 import { createServiceRoleClient } from "@/lib/supabase/server";
 import { addGalleryVideo, deleteGalleryItem, uploadGalleryImage } from "@/app/admin/gallery/actions";
 import { galleryCategories } from "@/lib/gallery-categories";
+import { getCloudinaryVideoThumbnail } from "@/lib/media";
 import type { GalleryItem } from "@/lib/supabase/types";
 
 export default async function AdminGalleryPage() {
@@ -68,8 +69,19 @@ export default async function AdminGalleryPage() {
               // eslint-disable-next-line @next/next/no-img-element -- admin thumbnail grid, avoids next/image config churn per new upload host
               <img src={item.url} alt={item.caption ?? ""} className="aspect-[4/3] w-full object-cover" />
             ) : (
-              <div className="flex aspect-video w-full items-center justify-center bg-foreground/90 text-background">
-                Video
+              <div className="relative aspect-video w-full overflow-hidden bg-foreground/90 text-background">
+                {getCloudinaryVideoThumbnail(item.url) ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- Cloudinary-generated
+                  // thumbnail, not a Next/Image-managed asset
+                  <img
+                    src={getCloudinaryVideoThumbnail(item.url) ?? undefined}
+                    alt={item.caption ?? ""}
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                ) : null}
+                <div className="absolute inset-0 flex items-center justify-center bg-black/30 text-xs font-semibold uppercase tracking-wide">
+                  Video
+                </div>
               </div>
             )}
             <div className="p-3">

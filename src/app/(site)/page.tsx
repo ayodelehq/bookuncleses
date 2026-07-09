@@ -5,17 +5,21 @@ import { Section, SectionHeading } from "@/components/layout/Section";
 import { ShowcaseCard } from "@/components/ui/ShowcaseCard";
 import { TestimonialCard } from "@/components/ui/TestimonialCard";
 import { PricingCard } from "@/components/ui/PricingCard";
+import { ServiceCard } from "@/components/ui/ServiceCard";
 import { FAQAccordion } from "@/components/ui/FAQAccordion";
 import { CTASection } from "@/components/ui/CTASection";
 import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
+import { VideoShowcaseTile } from "@/components/ui/VideoShowcaseTile";
 import { Reveal, RevealGroup, RevealItem, ZoomReveal } from "@/components/motion/Reveal";
+import { MarqueeRow } from "@/components/motion/MarqueeRow";
 import { getGalleryItems } from "@/lib/data/gallery";
 import { getTestimonials } from "@/lib/data/testimonials";
 import { getPublishedEvents } from "@/lib/data/events";
 import { getRateCard } from "@/lib/data/rate-card";
+import { getServices } from "@/lib/data/services";
 import { formatPrice } from "@/lib/format";
 import { bookingDepositNaira, siteConfig } from "@/lib/site-config";
-import type { RateCardCategory } from "@/lib/supabase/types";
+import type { RateCardCategory, ServiceCategory } from "@/lib/supabase/types";
 
 const heroPhrases = [
   "Trusted for weddings, corporate events, and private celebrations.",
@@ -38,6 +42,14 @@ const homeFaqs = [
   },
 ];
 
+const serviceCategoryOrder: ServiceCategory[] = ["entertainment", "creative", "event"];
+
+const serviceCategoryLabels: Record<ServiceCategory, string> = {
+  entertainment: "Entertainment",
+  creative: "Creative Services",
+  event: "Event Services",
+};
+
 const rateCardHighlights: { category: RateCardCategory; packageName: string }[] = [
   { category: "photography", packageName: "Signature" },
   { category: "videography", packageName: "Full Coverage" },
@@ -45,16 +57,16 @@ const rateCardHighlights: { category: RateCardCategory; packageName: string }[] 
 ];
 
 export default async function HomePage() {
-  const [gallery, testimonials, events, rateCard] = await Promise.all([
+  const [gallery, testimonials, events, rateCard, services] = await Promise.all([
     getGalleryItems(),
     getTestimonials(),
     getPublishedEvents(),
     getRateCard(),
+    getServices(),
   ]);
 
   const galleryPhotos = gallery.filter((item) => item.media_type === "image");
   const featuredWork = galleryPhotos.slice(0, 2);
-  const btsPhoto = galleryPhotos[2];
   const heroStack = galleryPhotos
     .slice(3, 7)
     .map((item, index) => ({ src: item.url, caption: heroPhrases[index % heroPhrases.length] }));
@@ -77,7 +89,62 @@ export default async function HomePage() {
         stackImages={heroStack}
       />
 
-      <Section>
+      {services.length > 0 ? (
+        <Section>
+          <SectionHeading
+            align="split"
+            title={
+              <>
+                <span className="text-brand">What</span> We Offer
+              </>
+            }
+            description="Every service Uncle Ses brings to your event, in one place."
+          />
+          {serviceCategoryOrder.map((category, index) => {
+            const groupServices = services.filter((service) => service.category === category);
+            if (groupServices.length === 0) return null;
+
+            return (
+              <Reveal key={category} className="mt-12 first:mt-10">
+                <h3 className="font-mono text-sm font-semibold uppercase tracking-[0.08em] text-brand-strong">
+                  {serviceCategoryLabels[category]}
+                </h3>
+                <div className="mt-6">
+                  <MarqueeRow
+                    items={groupServices.map((service) => (
+                      <ServiceCard
+                        key={service.id}
+                        icon={service.icon}
+                        title={service.title}
+                        description={service.description}
+                        badge={service.badge}
+                      />
+                    ))}
+                    direction={index % 2 === 0 ? "right" : "left"}
+                  />
+                </div>
+              </Reveal>
+            );
+          })}
+
+          <Reveal className="mt-14 flex flex-wrap items-center justify-center gap-4">
+            <Link
+              href="/bookings"
+              className="rounded-full bg-brand px-8 py-4 text-sm font-semibold text-brand-foreground transition-opacity hover:opacity-90"
+            >
+              Check Availability
+            </Link>
+            <Link
+              href="/rate-card"
+              className="rounded-full border border-border-subtle px-8 py-4 text-sm font-semibold transition-colors hover:border-brand hover:text-brand"
+            >
+              View Rate Card
+            </Link>
+          </Reveal>
+        </Section>
+      ) : null}
+
+      <Section className="bg-surface-alt">
         <SectionHeading
           align="split"
           title={
@@ -89,10 +156,16 @@ export default async function HomePage() {
           cta={{ label: "View All Work", href: "/photos" }}
         />
         <div className="mt-10 grid gap-6 sm:grid-cols-2">
-          {[0, 1].map((slot) => {
-            const item = featuredWork[slot];
+          <ZoomReveal>
+            <VideoShowcaseTile
+              src="https://res.cloudinary.com/dzomdloyf/video/upload/v1783521389/Naturally_I_love_weddings_and_wedding_parties._Extra_points_if_I_m_friends_with_the_couple._Ima_gn5kss.mp4"
+              caption="From the day"
+            />
+          </ZoomReveal>
+          {(() => {
+            const item = featuredWork[0];
             return (
-              <div key={slot} className="group relative aspect-3/4 overflow-hidden rounded-2xl">
+              <div className="group relative aspect-3/4 overflow-hidden rounded-2xl">
                 {item ? (
                   <>
                     <ZoomReveal className="absolute inset-0">
@@ -116,11 +189,11 @@ export default async function HomePage() {
                 )}
               </div>
             );
-          })}
+          })()}
         </div>
       </Section>
 
-      <Section className="bg-surface-alt">
+      <Section>
         <SectionHeading
           align="split"
           title={
@@ -131,24 +204,22 @@ export default async function HomePage() {
           description="A glimpse into how we bring each event to life."
         />
         <div className="relative mx-auto mt-10 aspect-3/4 max-w-md overflow-hidden rounded-2xl">
-          {btsPhoto ? (
-            <ZoomReveal className="absolute inset-0">
-              <Image
-                src={btsPhoto.url}
-                alt={btsPhoto.caption ?? "Behind the scenes"}
-                fill
-                sizes="(min-width: 810px) 448px, 100vw"
-                className="object-cover"
-              />
-            </ZoomReveal>
-          ) : (
-            <MediaPlaceholder kind="image" label="Behind-the-scenes photo required" fill />
-          )}
+          <ZoomReveal className="absolute inset-0">
+            <video
+              src="https://res.cloudinary.com/dzomdloyf/video/upload/v1783630805/Video_from_Jirova_1_pdd2iz.mp4"
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="h-full w-full object-cover"
+            />
+          </ZoomReveal>
+          <div className="absolute inset-0 bg-black/45" />
         </div>
       </Section>
 
       {testimonials.length > 0 ? (
-        <Section>
+        <Section className="bg-surface-alt">
           <SectionHeading
             align="split"
             title={
@@ -174,7 +245,7 @@ export default async function HomePage() {
       ) : null}
 
       {pricingPicks.length > 0 ? (
-        <Section className="bg-surface-alt">
+        <Section>
           <SectionHeading
             align="split"
             title={
@@ -204,7 +275,13 @@ export default async function HomePage() {
       <Section>
         <div className="grid gap-12 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
           <Reveal className="flex min-h-105 flex-col rounded-2xl bg-surface-alt p-8 sm:min-h-130">
-            <MediaPlaceholder kind="image" label="" className="h-16 w-16 rounded-full" />
+            <Image
+              src="/images/book-event.jpg"
+              alt=""
+              width={64}
+              height={64}
+              className="h-16 w-16 rounded-full object-cover"
+            />
             <h3 className="text-ink mt-6 text-2xl font-semibold uppercase tracking-[-0.04em]">Book an Event</h3>
             <p className="mt-3 font-mono text-sm text-muted">
               Reach out today to book your event, secure your spot, and get all the details you need

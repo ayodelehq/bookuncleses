@@ -12,8 +12,11 @@ import type { Addon, RateCardCategory, RateCardItem } from "@/lib/supabase/types
 
 const categories: { value: RateCardCategory; label: string }[] = [
   { value: "photography", label: "Photography" },
-  { value: "videography", label: "Videography" },
+  { value: "videography", label: "Video Coverage & Content Creation" },
   { value: "event_hosting", label: "Event Hosting & MC" },
+  { value: "stand_up_comedy", label: "Stand-up Comedy" },
+  { value: "hype_man", label: "Hype Man" },
+  { value: "event_planning", label: "Event Planning" },
 ];
 
 export default async function AdminRateCardPage() {
