@@ -3,19 +3,30 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import { motion } from "motion/react";
-import { galleryCategories } from "@/lib/gallery-categories";
 import { getCloudinaryVideoThumbnail, isDirectVideoUrl } from "@/lib/media";
 import { ZoomReveal } from "@/components/motion/Reveal";
-import type { GalleryItem } from "@/lib/supabase/types";
+import type { GalleryCategoryRow, GalleryItem } from "@/lib/supabase/types";
 
-export function PortfolioGallery({ items }: { items: GalleryItem[] }) {
+const PAGE_SIZE = 12;
+
+export function PortfolioGallery({
+  items,
+  categories,
+}: {
+  items: GalleryItem[];
+  categories: GalleryCategoryRow[];
+}) {
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [lightboxItem, setLightboxItem] = useState<GalleryItem | null>(null);
+  const [page, setPage] = useState(1);
 
   const filtered = useMemo(
     () => (activeCategory === "all" ? items : items.filter((item) => item.category === activeCategory)),
     [items, activeCategory],
   );
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   if (items.length === 0) {
     return (
@@ -28,7 +39,7 @@ export function PortfolioGallery({ items }: { items: GalleryItem[] }) {
     );
   }
 
-  const tabs = [{ value: "all", label: "All" }, ...galleryCategories];
+  const tabs = [{ value: "all", label: "All" }, ...categories];
 
   return (
     <div>
@@ -39,7 +50,10 @@ export function PortfolioGallery({ items }: { items: GalleryItem[] }) {
             <button
               key={tab.value}
               type="button"
-              onClick={() => setActiveCategory(tab.value)}
+              onClick={() => {
+                setActiveCategory(tab.value);
+                setPage(1);
+              }}
               className={`relative rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                 active ? "text-brand-foreground" : "border border-border-subtle"
               }`}
@@ -61,7 +75,7 @@ export function PortfolioGallery({ items }: { items: GalleryItem[] }) {
         <p className="mt-10 text-sm text-muted">No items in this category yet.</p>
       ) : (
         <div className="mt-8 columns-1 gap-4 sm:columns-2 lg:columns-3">
-          {filtered.map((item) => (
+          {paginated.map((item) => (
             <button
               key={item.id}
               type="button"
@@ -101,6 +115,42 @@ export function PortfolioGallery({ items }: { items: GalleryItem[] }) {
           ))}
         </div>
       )}
+
+      {totalPages > 1 ? (
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-2">
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className="rounded-full border border-border-subtle px-4 py-2 text-sm font-medium transition-colors hover:border-brand hover:text-brand disabled:pointer-events-none disabled:opacity-40"
+          >
+            Previous
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+            <button
+              key={n}
+              type="button"
+              onClick={() => setPage(n)}
+              aria-current={n === page}
+              className={`flex h-9 w-9 items-center justify-center rounded-full text-sm font-medium transition-colors ${
+                n === page
+                  ? "bg-brand text-brand-foreground"
+                  : "border border-border-subtle hover:border-brand hover:text-brand"
+              }`}
+            >
+              {n}
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            className="rounded-full border border-border-subtle px-4 py-2 text-sm font-medium transition-colors hover:border-brand hover:text-brand disabled:pointer-events-none disabled:opacity-40"
+          >
+            Next
+          </button>
+        </div>
+      ) : null}
 
       {lightboxItem ? (
         <div

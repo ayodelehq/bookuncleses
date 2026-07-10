@@ -64,7 +64,7 @@ export function LoginForm() {
       >
         {pending ? "Signing in..." : "Sign In"}
       </button>
-      {error ? <p className="text-sm text-red-600">{error}</p> : null}
+      {error ? <p className="text-sm text-status-danger">{error}</p> : null}
     </form>
   );
 }

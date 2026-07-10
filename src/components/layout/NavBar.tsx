@@ -120,17 +120,17 @@ export function NavBar() {
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
               whileTap={{ scale: 0.94 }}
-              className="relative inline-flex h-10 w-10 items-center justify-center rounded-full bg-brand sm:hidden"
+              className="relative inline-flex h-10 w-10 items-center justify-center rounded-full sm:hidden"
               onClick={() => setOpen((v) => !v)}
             >
               <span className="relative flex h-4 w-5 flex-col justify-between">
                 <span
-                  className={`h-0.5 w-5 rounded-full bg-brand-foreground transition-transform duration-300 ${
+                  className={`h-0.5 w-5 rounded-full bg-foreground transition-transform duration-300 ${
                     open ? "translate-y-1.75 rotate-45" : ""
                   }`}
                 />
                 <span
-                  className={`h-0.5 self-end rounded-full bg-brand-foreground transition-all duration-300 ${
+                  className={`h-0.5 self-end rounded-full bg-foreground transition-all duration-300 ${
                     open ? "w-5 -translate-y-1.75 -rotate-45" : "w-3.5"
                   }`}
                 />

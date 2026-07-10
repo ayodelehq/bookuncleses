@@ -10,7 +10,8 @@ export type BookingStatus = "pending" | "deposit_paid" | "confirmed" | "cancelle
 export type PaymentProvider = "paystack" | "flutterwave";
 export type EventStatus = "draft" | "published";
 export type OrderStatus = "pending" | "paid" | "cancelled";
-export type GalleryCategory = "weddings" | "corporate" | "portraits" | "hosted_events";
+// Admin-managed (see gallery_categories table) rather than a fixed set.
+export type GalleryCategory = string;
 export type GalleryMediaType = "image" | "video_embed";
 export type RateCardCategory =
   | "photography"
@@ -100,6 +101,12 @@ export interface GalleryItem {
   caption: string | null;
   sort_order: number;
   created_at: string;
+}
+
+export interface GalleryCategoryRow {
+  value: string;
+  label: string;
+  sort_order: number;
 }
 
 export interface RateCardItem {

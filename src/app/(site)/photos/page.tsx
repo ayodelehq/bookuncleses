@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Hero } from "@/components/ui/Hero";
 import { Section } from "@/components/layout/Section";
 import { PortfolioGallery } from "@/components/photos/PortfolioGallery";
-import { getGalleryItems } from "@/lib/data/gallery";
+import { getGalleryCategories, getGalleryItems } from "@/lib/data/gallery";
 
 export const metadata: Metadata = {
   title: "Photos & Videos — Bookuncleses",
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function PhotosPage() {
-  const items = await getGalleryItems();
+  const [items, categories] = await Promise.all([getGalleryItems(), getGalleryCategories()]);
 
   return (
     <>
@@ -22,7 +22,7 @@ export default async function PhotosPage() {
       />
 
       <Section>
-        <PortfolioGallery items={items} />
+        <PortfolioGallery items={items} categories={categories} />
       </Section>
     </>
   );

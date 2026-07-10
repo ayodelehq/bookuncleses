@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import type { GalleryItem } from "@/lib/supabase/types";
+import type { GalleryCategoryRow, GalleryItem } from "@/lib/supabase/types";
 
 // No fallback rows here on purpose: portfolio photos/videos are the
 // business's real past work, and we won't fabricate placeholder shoots.
@@ -10,6 +10,16 @@ export async function getGalleryItems(): Promise<GalleryItem[]> {
     const supabase = await createClient();
     const { data } = await supabase.from("gallery_items").select("*").order("sort_order");
     return (data as GalleryItem[] | null) ?? [];
+  } catch {
+    return [];
+  }
+}
+
+export async function getGalleryCategories(): Promise<GalleryCategoryRow[]> {
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase.from("gallery_categories").select("*").order("sort_order");
+    return (data as GalleryCategoryRow[] | null) ?? [];
   } catch {
     return [];
   }

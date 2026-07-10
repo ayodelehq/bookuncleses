@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { SignOutButton } from "@/components/admin/SignOutButton";
+import { AdminMobileNav } from "@/components/admin/AdminMobileNav";
 
 const adminNav = [
   { label: "Overview", href: "/admin" },
@@ -10,6 +11,7 @@ const adminNav = [
   { label: "Gallery", href: "/admin/gallery" },
   { label: "Rate Card", href: "/admin/rate-card" },
   { label: "Services", href: "/admin/services" },
+  { label: "Testimonials", href: "/admin/testimonials" },
 ];
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -27,28 +29,31 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen flex-col sm:flex-row">
       {user ? (
-        <aside className="hidden w-56 shrink-0 border-r border-border-subtle bg-surface p-6 sm:block">
-          <p className="text-lg font-semibold">Admin</p>
-          <nav className="mt-8 flex flex-col gap-1">
-            {adminNav.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="rounded-md px-3 py-2 text-sm font-medium text-foreground/80 hover:bg-background hover:text-foreground"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-          <div className="mt-8 border-t border-border-subtle pt-4">
-            <p className="truncate text-xs text-muted">{user.email}</p>
-            <div className="mt-2">
-              <SignOutButton />
+        <>
+          <AdminMobileNav navItems={adminNav} userEmail={user.email ?? ""} />
+          <aside className="hidden w-56 shrink-0 self-start border-r border-border-subtle bg-surface p-6 sm:sticky sm:top-0 sm:block sm:max-h-screen sm:overflow-y-auto">
+            <p className="text-lg font-semibold">Admin</p>
+            <nav className="mt-8 flex flex-col gap-1">
+              {adminNav.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="rounded-md px-3 py-2 text-sm font-medium text-foreground/80 hover:bg-background hover:text-foreground"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+            <div className="mt-8 border-t border-border-subtle pt-4">
+              <p className="truncate text-xs text-muted">{user.email}</p>
+              <div className="mt-2">
+                <SignOutButton />
+              </div>
             </div>
-          </div>
-        </aside>
+          </aside>
+        </>
       ) : null}
       <div className="flex-1 p-6 sm:p-10">{children}</div>
     </div>

@@ -5,8 +5,8 @@ import {
   createRateCardItem,
   deleteAddon,
   deleteRateCardItem,
-  updateAddonPrice,
-  updateRateCardPrice,
+  updateAddon,
+  updateRateCardItem,
 } from "@/app/admin/rate-card/actions";
 import type { Addon, RateCardCategory, RateCardItem } from "@/lib/supabase/types";
 
@@ -48,44 +48,81 @@ export default async function AdminRateCardPage() {
                 <thead className="border-b border-border-subtle text-left text-xs uppercase tracking-wide text-muted">
                   <tr>
                     <th className="p-3">Package</th>
+                    <th className="p-3">Description</th>
                     <th className="p-3">Duration</th>
                     <th className="p-3">Price (₦)</th>
                     <th className="p-3" />
                   </tr>
                 </thead>
                 <tbody>
-                  {items.map((item) => (
-                    <tr key={item.id} className="border-b border-border-subtle last:border-0">
-                      <td className="p-3">
-                        <p className="font-medium">{item.package_name}</p>
-                        <p className="text-xs text-muted">{item.description}</p>
-                      </td>
-                      <td className="p-3">{item.duration}</td>
-                      <td className="p-3">
-                        <form action={updateRateCardPrice} className="flex items-center gap-2">
-                          <input type="hidden" name="id" value={item.id} />
+                  {items.map((item) => {
+                    const formId = `rate-${item.id}`;
+                    return (
+                      <tr key={item.id} className="border-b border-border-subtle last:border-0 align-top">
+                        <td className="p-3">
+                          <form id={formId} action={updateRateCardItem}>
+                            <input type="hidden" name="id" value={item.id} />
+                          </form>
                           <input
+                            form={formId}
+                            name="packageName"
+                            defaultValue={item.package_name}
+                            required
+                            className="w-40 rounded-lg border border-border-subtle bg-background px-2 py-1 text-sm font-medium"
+                          />
+                        </td>
+                        <td className="p-3">
+                          <textarea
+                            form={formId}
+                            name="description"
+                            defaultValue={item.description}
+                            required
+                            rows={2}
+                            className="w-56 rounded-lg border border-border-subtle bg-background px-2 py-1 text-xs"
+                          />
+                        </td>
+                        <td className="p-3">
+                          <input
+                            form={formId}
+                            name="duration"
+                            defaultValue={item.duration}
+                            required
+                            className="w-28 rounded-lg border border-border-subtle bg-background px-2 py-1"
+                          />
+                        </td>
+                        <td className="p-3">
+                          <input
+                            form={formId}
                             type="number"
                             name="price"
                             defaultValue={item.price ?? ""}
                             placeholder="e.g. 150000"
                             className="w-32 rounded-lg border border-border-subtle bg-background px-2 py-1"
                           />
-                          <button type="submit" className="text-xs font-semibold text-brand hover:underline">
-                            Save
-                          </button>
-                        </form>
-                      </td>
-                      <td className="p-3">
-                        <form action={deleteRateCardItem}>
-                          <input type="hidden" name="id" value={item.id} />
-                          <button type="submit" className="text-xs font-semibold text-red-600 hover:underline">
-                            Delete
-                          </button>
-                        </form>
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td className="p-3">
+                          <div className="flex flex-col gap-2">
+                            <button
+                              form={formId}
+                              type="submit"
+                              className="flex min-h-11 items-center rounded-md px-2 text-sm font-semibold text-brand hover:underline"
+                            >
+                              Save
+                            </button>
+                            <form action={deleteRateCardItem}>
+                              <input type="hidden" name="id" value={item.id} />
+                              <button
+                                type="submit"
+                                className="flex min-h-11 items-center rounded-md px-2 text-sm font-semibold text-status-danger hover:underline"
+                              >
+                                Delete
+                              </button>
+                            </form>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -118,7 +155,7 @@ export default async function AdminRateCardPage() {
               />
               <button
                 type="submit"
-                className="rounded-full bg-brand px-4 py-2 text-xs font-semibold text-brand-foreground"
+                className="min-h-11 rounded-full bg-brand px-4 py-2 text-xs font-semibold text-brand-foreground"
               >
                 Add Package
               </button>
@@ -139,33 +176,54 @@ export default async function AdminRateCardPage() {
               </tr>
             </thead>
             <tbody>
-              {addons.map((addon) => (
-                <tr key={addon.id} className="border-b border-border-subtle last:border-0">
-                  <td className="p-3">{addon.name}</td>
-                  <td className="p-3">
-                    <form action={updateAddonPrice} className="flex items-center gap-2">
-                      <input type="hidden" name="id" value={addon.id} />
+              {addons.map((addon) => {
+                const formId = `addon-${addon.id}`;
+                return (
+                  <tr key={addon.id} className="border-b border-border-subtle last:border-0">
+                    <td className="p-3">
+                      <form id={formId} action={updateAddon}>
+                        <input type="hidden" name="id" value={addon.id} />
+                      </form>
                       <input
+                        form={formId}
+                        name="name"
+                        defaultValue={addon.name}
+                        required
+                        className="w-48 rounded-lg border border-border-subtle bg-background px-2 py-1 text-sm"
+                      />
+                    </td>
+                    <td className="p-3">
+                      <input
+                        form={formId}
                         type="number"
                         name="price"
                         defaultValue={addon.price ?? ""}
                         className="w-32 rounded-lg border border-border-subtle bg-background px-2 py-1"
                       />
-                      <button type="submit" className="text-xs font-semibold text-brand hover:underline">
-                        Save
-                      </button>
-                    </form>
-                  </td>
-                  <td className="p-3">
-                    <form action={deleteAddon}>
-                      <input type="hidden" name="id" value={addon.id} />
-                      <button type="submit" className="text-xs font-semibold text-red-600 hover:underline">
-                        Delete
-                      </button>
-                    </form>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td className="p-3">
+                      <div className="flex items-center gap-4">
+                        <button
+                          form={formId}
+                          type="submit"
+                          className="flex min-h-11 items-center rounded-md px-2 text-sm font-semibold text-brand hover:underline"
+                        >
+                          Save
+                        </button>
+                        <form action={deleteAddon}>
+                          <input type="hidden" name="id" value={addon.id} />
+                          <button
+                            type="submit"
+                            className="flex min-h-11 items-center rounded-md px-2 text-sm font-semibold text-status-danger hover:underline"
+                          >
+                            Delete
+                          </button>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -185,7 +243,7 @@ export default async function AdminRateCardPage() {
           />
           <button
             type="submit"
-            className="rounded-full bg-brand px-4 py-2 text-xs font-semibold text-brand-foreground"
+            className="min-h-11 rounded-full bg-brand px-4 py-2 text-xs font-semibold text-brand-foreground"
           >
             Add Add-on
           </button>

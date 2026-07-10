@@ -2,6 +2,8 @@ import { requireAdminUser } from "@/lib/auth/admin";
 import { createServiceRoleClient } from "@/lib/supabase/server";
 import { createService, deleteService, updateService } from "@/app/admin/services/actions";
 import { ServiceIcon, serviceIconOptions } from "@/components/ui/ServiceIcon";
+import { CharCountTextarea } from "@/components/admin/CharCountTextarea";
+import { SERVICE_DESCRIPTION_MAX_LENGTH } from "@/lib/services";
 import type { Service, ServiceCategory, ServiceKind } from "@/lib/supabase/types";
 
 const kindOptions: { value: ServiceKind; label: string }[] = [
@@ -116,50 +118,26 @@ export default async function AdminServicesPage() {
                     <span className="text-xs font-medium uppercase tracking-wide text-muted">
                       Description
                     </span>
-                    <textarea
+                    <CharCountTextarea
                       name="description"
                       defaultValue={service.description}
+                      maxLength={SERVICE_DESCRIPTION_MAX_LENGTH}
                       required
-                      rows={3}
-                      className="rounded-lg border border-border-subtle bg-background px-3 py-2"
+                      className="w-full rounded-lg border border-border-subtle bg-background px-3 py-2"
                     />
                   </label>
 
-                  <div className="mt-3 grid gap-3 sm:grid-cols-3">
-                    <label className="flex flex-col gap-1 text-sm">
-                      <span className="text-xs font-medium uppercase tracking-wide text-muted">
-                        Badge (optional)
-                      </span>
-                      <input
-                        name="badge"
-                        defaultValue={service.badge ?? ""}
-                        placeholder="e.g. Coming Soon"
-                        className="rounded-lg border border-border-subtle bg-background px-3 py-2"
-                      />
-                    </label>
-                    <label className="flex flex-col gap-1 text-sm">
-                      <span className="text-xs font-medium uppercase tracking-wide text-muted">
-                        Button label
-                      </span>
-                      <input
-                        name="ctaLabel"
-                        defaultValue={service.cta_label}
-                        required
-                        className="rounded-lg border border-border-subtle bg-background px-3 py-2"
-                      />
-                    </label>
-                    <label className="flex flex-col gap-1 text-sm">
-                      <span className="text-xs font-medium uppercase tracking-wide text-muted">
-                        Button link
-                      </span>
-                      <input
-                        name="ctaHref"
-                        defaultValue={service.cta_href}
-                        required
-                        className="rounded-lg border border-border-subtle bg-background px-3 py-2"
-                      />
-                    </label>
-                  </div>
+                  <label className="mt-3 flex max-w-xs flex-col gap-1 text-sm">
+                    <span className="text-xs font-medium uppercase tracking-wide text-muted">
+                      Badge (optional)
+                    </span>
+                    <input
+                      name="badge"
+                      defaultValue={service.badge ?? ""}
+                      placeholder="e.g. Coming Soon"
+                      className="rounded-lg border border-border-subtle bg-background px-3 py-2"
+                    />
+                  </label>
 
                   <div className="mt-3 flex items-end justify-between gap-3">
                     <label className="flex flex-col gap-1 text-sm">
@@ -174,13 +152,16 @@ export default async function AdminServicesPage() {
                       />
                     </label>
                     <div className="flex items-center gap-4">
-                      <button type="submit" className="text-sm font-semibold text-brand hover:underline">
+                      <button
+                        type="submit"
+                        className="flex min-h-11 items-center rounded-md px-2 text-sm font-semibold text-brand hover:underline"
+                      >
                         Save
                       </button>
                       <button
                         type="submit"
                         formAction={deleteService}
-                        className="text-sm font-semibold text-red-600 hover:underline"
+                        className="flex min-h-11 items-center rounded-md px-2 text-sm font-semibold text-status-danger hover:underline"
                       >
                         Delete
                       </button>
@@ -251,44 +232,24 @@ export default async function AdminServicesPage() {
 
           <label className="mt-3 flex flex-col gap-1 text-sm">
             <span className="text-xs font-medium uppercase tracking-wide text-muted">Description</span>
-            <textarea
+            <CharCountTextarea
               name="description"
+              maxLength={SERVICE_DESCRIPTION_MAX_LENGTH}
               required
-              rows={3}
-              className="rounded-lg border border-border-subtle bg-background px-3 py-2"
+              className="w-full rounded-lg border border-border-subtle bg-background px-3 py-2"
             />
           </label>
 
-          <div className="mt-3 grid gap-3 sm:grid-cols-3">
-            <label className="flex flex-col gap-1 text-sm">
-              <span className="text-xs font-medium uppercase tracking-wide text-muted">
-                Badge (optional)
-              </span>
-              <input
-                name="badge"
-                placeholder="e.g. Coming Soon"
-                className="rounded-lg border border-border-subtle bg-background px-3 py-2"
-              />
-            </label>
-            <label className="flex flex-col gap-1 text-sm">
-              <span className="text-xs font-medium uppercase tracking-wide text-muted">Button label</span>
-              <input
-                name="ctaLabel"
-                required
-                placeholder="e.g. View Packages"
-                className="rounded-lg border border-border-subtle bg-background px-3 py-2"
-              />
-            </label>
-            <label className="flex flex-col gap-1 text-sm">
-              <span className="text-xs font-medium uppercase tracking-wide text-muted">Button link</span>
-              <input
-                name="ctaHref"
-                required
-                placeholder="/rate-card#photography"
-                className="rounded-lg border border-border-subtle bg-background px-3 py-2"
-              />
-            </label>
-          </div>
+          <label className="mt-3 flex max-w-xs flex-col gap-1 text-sm">
+            <span className="text-xs font-medium uppercase tracking-wide text-muted">
+              Badge (optional)
+            </span>
+            <input
+              name="badge"
+              placeholder="e.g. Coming Soon"
+              className="rounded-lg border border-border-subtle bg-background px-3 py-2"
+            />
+          </label>
 
           <div className="mt-3 flex items-end justify-between gap-3">
             <label className="flex flex-col gap-1 text-sm">
@@ -302,7 +263,7 @@ export default async function AdminServicesPage() {
             </label>
             <button
               type="submit"
-              className="rounded-full bg-brand px-4 py-2 text-xs font-semibold text-brand-foreground"
+              className="min-h-11 rounded-full bg-brand px-4 py-2 text-xs font-semibold text-brand-foreground"
             >
               Add Service
             </button>

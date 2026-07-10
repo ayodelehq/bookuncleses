@@ -12,13 +12,21 @@ function parsePrice(value: FormDataEntryValue | null): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-export async function updateRateCardPrice(formData: FormData) {
+export async function updateRateCardItem(formData: FormData) {
   await requireAdminUser();
   const id = String(formData.get("id"));
+  const packageName = String(formData.get("packageName") ?? "").trim();
+  const description = String(formData.get("description") ?? "").trim();
+  const duration = String(formData.get("duration") ?? "").trim();
   const price = parsePrice(formData.get("price"));
 
+  if (!packageName || !description || !duration) return;
+
   const supabase = createServiceRoleClient();
-  await supabase.from("rate_card").update({ price }).eq("id", id);
+  await supabase
+    .from("rate_card")
+    .update({ package_name: packageName, description, duration, price })
+    .eq("id", id);
   revalidatePath("/admin/rate-card");
   revalidatePath("/rate-card");
 }
@@ -50,13 +58,16 @@ export async function deleteRateCardItem(formData: FormData) {
   revalidatePath("/rate-card");
 }
 
-export async function updateAddonPrice(formData: FormData) {
+export async function updateAddon(formData: FormData) {
   await requireAdminUser();
   const id = String(formData.get("id"));
+  const name = String(formData.get("name") ?? "").trim();
   const price = parsePrice(formData.get("price"));
 
+  if (!name) return;
+
   const supabase = createServiceRoleClient();
-  await supabase.from("addons").update({ price }).eq("id", id);
+  await supabase.from("addons").update({ name, price }).eq("id", id);
   revalidatePath("/admin/rate-card");
   revalidatePath("/rate-card");
 }

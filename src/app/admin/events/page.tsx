@@ -52,11 +52,19 @@ export default async function AdminEventsPage() {
                   <div className="flex items-center gap-3">
                     <span
                       className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                        event.status === "published" ? "bg-green-500/15 text-green-700" : "bg-yellow-500/15 text-yellow-700"
+                        event.status === "published"
+                          ? "bg-status-success-soft text-status-success"
+                          : "bg-status-warning-soft text-status-warning"
                       }`}
                     >
                       {event.status}
                     </span>
+                    <Link
+                      href={`/admin/events/${event.id}`}
+                      className="flex min-h-11 items-center rounded-md px-2 text-sm font-semibold text-brand hover:underline"
+                    >
+                      Orders
+                    </Link>
                     <form action={togglePublish}>
                       <input type="hidden" name="id" value={event.id} />
                       <input
@@ -64,13 +72,19 @@ export default async function AdminEventsPage() {
                         name="nextStatus"
                         value={event.status === "published" ? "draft" : "published"}
                       />
-                      <button type="submit" className="text-xs font-semibold text-brand hover:underline">
+                      <button
+                        type="submit"
+                        className="flex min-h-11 items-center rounded-md px-2 text-sm font-semibold text-brand hover:underline"
+                      >
                         {event.status === "published" ? "Unpublish" : "Publish"}
                       </button>
                     </form>
                     <form action={deleteEvent}>
                       <input type="hidden" name="id" value={event.id} />
-                      <button type="submit" className="text-xs font-semibold text-red-600 hover:underline">
+                      <button
+                        type="submit"
+                        className="flex min-h-11 items-center rounded-md px-2 text-sm font-semibold text-status-danger hover:underline"
+                      >
                         Delete
                       </button>
                     </form>

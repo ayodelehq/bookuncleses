@@ -23,6 +23,17 @@
   --accent: #f47521;
   --accent-foreground: #1e1e1e;
   --muted: #6b6b6b;
+
+  /* Admin-only status vocabulary (booking/event/order states) — verified
+     >=4.5:1 on their own -soft tint background, not reused from brand
+     colors since these carry semantic meaning (success/pending/danger),
+     not identity. */
+  --status-success: #15803d;
+  --status-success-soft: #dcfce7;
+  --status-warning: #92400e;
+  --status-warning-soft: #fef3c7;
+  --status-danger: #b91c1c;
+  --status-danger-soft: #fee2e2;
 }
 
 @theme inline {
@@ -42,6 +53,12 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-muted: var(--muted);
+  --color-status-success: var(--status-success);
+  --color-status-success-soft: var(--status-success-soft);
+  --color-status-warning: var(--status-warning);
+  --color-status-warning-soft: var(--status-warning-soft);
+  --color-status-danger: var(--status-danger);
+  --color-status-danger-soft: var(--status-danger-soft);
   --font-sans: var(--font-body);
   --font-display: var(--font-heading-raw);
   --font-mono: var(--font-mono-raw);
