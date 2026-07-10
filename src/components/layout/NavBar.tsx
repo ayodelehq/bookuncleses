@@ -43,7 +43,7 @@ export function NavBar() {
       <AnimatePresence>
         {open ? (
           <motion.div
-            className="fixed inset-0 z-40 bg-black/40 sm:hidden"
+            className="fixed inset-0 z-40 bg-black/40 lg:hidden"
             onClick={() => setOpen(false)}
             aria-hidden
             initial={{ opacity: 0 }}
@@ -82,7 +82,7 @@ export function NavBar() {
               {siteConfig.name}
             </Link>
 
-            <nav className="hidden items-center gap-8 sm:flex">
+            <nav className="hidden items-center gap-8 lg:flex">
               {mainNav.map((item) => {
                 const active = pathname === item.href;
                 return (
@@ -106,7 +106,7 @@ export function NavBar() {
               })}
             </nav>
 
-            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className="hidden sm:inline-block">
+            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className="hidden lg:inline-block">
               <Link
                 href="/bookings"
                 className="inline-block rounded-full bg-brand px-5 py-2 text-sm font-semibold text-brand-foreground transition-opacity hover:opacity-90"
@@ -120,7 +120,7 @@ export function NavBar() {
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
               whileTap={{ scale: 0.94 }}
-              className="relative inline-flex h-10 w-10 items-center justify-center rounded-full sm:hidden"
+              className="relative inline-flex h-10 w-10 items-center justify-center rounded-full lg:hidden"
               onClick={() => setOpen((v) => !v)}
             >
               <span className="relative flex h-4 w-5 flex-col justify-between">
@@ -141,7 +141,7 @@ export function NavBar() {
           <AnimatePresence>
             {open ? (
               <motion.nav
-                className="flex flex-col items-center gap-1 overflow-hidden border-t border-border-subtle px-6 pb-6 pt-2 sm:hidden"
+                className="flex flex-col items-center gap-1 overflow-hidden border-t border-border-subtle px-6 pb-6 pt-2 lg:hidden"
                 variants={reduceMotion ? undefined : drawerVariants}
                 initial="hidden"
                 animate="show"

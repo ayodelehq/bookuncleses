@@ -67,9 +67,15 @@ export default async function HomePage() {
 
   const galleryPhotos = gallery.filter((item) => item.media_type === "image");
   const featuredWork = galleryPhotos.slice(0, 2);
-  const heroStack = galleryPhotos
-    .slice(3, 7)
-    .map((item, index) => ({ src: item.url, caption: heroPhrases[index % heroPhrases.length] }));
+
+  // Pinned to the front of the hero rotation by request — the standard
+  // slice(3, 7) selection didn't reach this far down the gallery.
+  const featuredHeroUrl = "https://res.cloudinary.com/dzomdloyf/image/upload/f_auto,q_auto/THEYPH00013_cx8dch.jpg";
+  const featuredHeroPhoto = galleryPhotos.find((item) => item.url === featuredHeroUrl);
+  const otherHeroPhotos = galleryPhotos.filter((item) => item.url !== featuredHeroUrl).slice(3, 6);
+  const heroStack = [...(featuredHeroPhoto ? [featuredHeroPhoto] : []), ...otherHeroPhotos].map(
+    (item, index) => ({ src: item.url, caption: heroPhrases[index % heroPhrases.length] }),
+  );
   const upcomingEvents = events.slice(0, 3);
 
   const pricingPicks = rateCardHighlights

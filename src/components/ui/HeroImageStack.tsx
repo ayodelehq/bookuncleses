@@ -44,7 +44,7 @@ export function HeroImageStack({
 
   return (
     <div>
-      <div className="relative aspect-3/4 w-full">
+      <div className="relative aspect-3/4 max-h-[52vh] w-full sm:max-h-[58vh] lg:max-h-[62vh]">
         {visible.map((img, i) => {
           const slot = (i - active + visible.length) % visible.length;
           const style = SLOTS[Math.min(slot, SLOTS.length - 1)];
@@ -67,7 +67,7 @@ export function HeroImageStack({
                 alt={img.caption ?? "Portfolio photo"}
                 fill
                 sizes="(min-width: 810px) 50vw, 100vw"
-                className="object-cover"
+                className="object-cover object-top"
               />
             </motion.div>
           );

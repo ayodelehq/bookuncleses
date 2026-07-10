@@ -55,7 +55,7 @@ export function Hero({
   if (onSplit) {
     return (
       <div className="relative overflow-hidden border-b border-border-subtle">
-        <Container className="grid gap-10 pt-35 pb-15 sm:grid-cols-2 sm:items-center sm:gap-12 sm:pt-45 sm:pb-25 lg:gap-16 lg:pt-55 lg:pb-31">
+        <Container className="grid gap-10 pt-20 pb-15 sm:grid-cols-2 sm:items-center sm:gap-12 sm:pt-28 sm:pb-25 lg:gap-16 lg:pt-32 lg:pb-31">
           <motion.div className="max-w-xl" {...entrance}>
             <motion.h1
               className={`origin-left text-[40px] font-semibold leading-[1.05] tracking-[-0.04em] sm:text-[48px] lg:text-[64px] ${
