@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Hero } from "@/components/ui/Hero";
 import { Section } from "@/components/layout/Section";
+
+export const metadata: Metadata = {
+  title: "Booking Confirmed",
+  robots: { index: false, follow: false },
+};
 
 export default function BookingSuccessPage() {
   return (

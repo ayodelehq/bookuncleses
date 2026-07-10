@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { SignOutButton } from "@/components/admin/SignOutButton";
 import { AdminMobileNav } from "@/components/admin/AdminMobileNav";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 const adminNav = [
   { label: "Overview", href: "/admin" },
@@ -34,7 +40,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <>
           <AdminMobileNav navItems={adminNav} userEmail={user.email ?? ""} />
           <aside className="hidden w-56 shrink-0 self-start border-r border-border-subtle bg-surface p-6 sm:sticky sm:top-0 sm:block sm:max-h-screen sm:overflow-y-auto">
-            <p className="text-lg font-semibold">Admin</p>
+            <Link href="/admin" className="flex items-center gap-2 text-lg font-semibold tracking-tight">
+              <Image src="/brand/logo-color.png" alt="" aria-hidden width={28} height={35} className="h-7 w-auto" />
+              Admin
+            </Link>
             <nav className="mt-8 flex flex-col gap-1">
               {adminNav.map((item) => (
                 <Link

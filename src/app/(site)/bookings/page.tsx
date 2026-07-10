@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Section, SectionHeading } from "@/components/layout/Section";
 import { Container } from "@/components/layout/Container";
 import { BookingForm } from "@/components/bookings/BookingForm";
@@ -7,11 +6,13 @@ import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
 import { getBlockedDates } from "@/lib/data/bookings";
 import { bookingDepositNaira, siteConfig } from "@/lib/site-config";
 import { formatPrice } from "@/lib/format";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Book an Event — Bookuncleses",
+export const metadata = pageMetadata({
+  title: "Book an Event",
   description: "Reserve your date for photography, video, event hosting, venue planning, or comedy with a deposit.",
-};
+  path: "/bookings",
+});
 
 const bookingFaqs = [
   {

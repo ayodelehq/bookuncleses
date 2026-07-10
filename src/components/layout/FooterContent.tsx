@@ -123,9 +123,6 @@ export function FooterContent({ upcomingCount }: { upcomingCount: number }) {
             <a href={siteConfig.instagram} className="hover:text-background">
               Instagram
             </a>
-            <a href={siteConfig.tiktok} className="hover:text-background">
-              TikTok
-            </a>
           </div>
         </motion.div>
       </Container>

@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { Hero } from "@/components/ui/Hero";
 import { Section, SectionHeading } from "@/components/layout/Section";
@@ -8,6 +7,7 @@ import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
 import { getRateCard } from "@/lib/data/rate-card";
 import { formatPrice } from "@/lib/format";
 import { siteConfig } from "@/lib/site-config";
+import { pageMetadata } from "@/lib/seo";
 import type { RateCardCategory } from "@/lib/supabase/types";
 
 const pricingFaqs = [
@@ -28,10 +28,11 @@ const pricingFaqs = [
   },
 ];
 
-export const metadata: Metadata = {
-  title: "Rate Card — Bookuncleses",
+export const metadata = pageMetadata({
+  title: "Rate Card",
   description: "Transparent pricing for photography, video, event hosting, venue planning, and comedy packages.",
-};
+  path: "/rate-card",
+});
 
 const categoryLabels: Record<RateCardCategory, string> = {
   photography: "Photography",

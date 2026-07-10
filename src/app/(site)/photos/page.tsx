@@ -1,13 +1,14 @@
-import type { Metadata } from "next";
 import { Hero } from "@/components/ui/Hero";
 import { Section } from "@/components/layout/Section";
 import { PortfolioGallery } from "@/components/photos/PortfolioGallery";
 import { getGalleryCategories, getGalleryItems } from "@/lib/data/gallery";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Photos & Videos — Bookuncleses",
+export const metadata = pageMetadata({
+  title: "Photos & Videos",
   description: "Browse past weddings, corporate events, portraits, and hosted events.",
-};
+  path: "/photos",
+});
 
 export default async function PhotosPage() {
   const [items, categories] = await Promise.all([getGalleryItems(), getGalleryCategories()]);

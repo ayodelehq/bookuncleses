@@ -1,13 +1,14 @@
-import type { Metadata } from "next";
 import { Hero } from "@/components/ui/Hero";
 import { Section } from "@/components/layout/Section";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { siteConfig } from "@/lib/site-config";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Contact — Bookuncleses",
+export const metadata = pageMetadata({
+  title: "Contact",
   description: "Reach out for enquiries, custom quotes, and partnerships.",
-};
+  path: "/contact",
+});
 
 export default function ContactPage() {
   return (
@@ -58,11 +59,6 @@ export default function ContactPage() {
                 <li>
                   <a href={siteConfig.instagram} className="text-brand hover:underline">
                     Instagram
-                  </a>
-                </li>
-                <li>
-                  <a href={siteConfig.tiktok} className="text-brand hover:underline">
-                    TikTok
                   </a>
                 </li>
               </ul>

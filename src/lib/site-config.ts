@@ -3,12 +3,11 @@ export const siteConfig = {
   tagline: "Every Moment, Beautifully Booked.",
   description:
     "Photography, video & content creation, event hosting, venue planning, stand-up comedy, and brand promotion — browse the portfolio, check pricing, and book directly.",
-  whatsappNumber: "2340000000000",
-  email: "hello@bookuncleses.com",
-  phone: "+234 000 000 0000",
+  whatsappNumber: "2347067109740",
+  email: "callmesesmo@gmail.com",
+  phone: "+234 706 710 9740",
   address: "Abuja, Nigeria",
-  instagram: "https://instagram.com/bookuncleses",
-  tiktok: "https://tiktok.com/@bookuncleses",
+  instagram: "https://www.instagram.com/unclesescanhostit",
 };
 
 // Flat deposit required to hold a date, regardless of package — simplest

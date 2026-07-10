@@ -1,14 +1,15 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { Hero } from "@/components/ui/Hero";
 import { Section } from "@/components/layout/Section";
 import { ShowcaseCard } from "@/components/ui/ShowcaseCard";
 import { getPublishedEvents } from "@/lib/data/events";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Tickets — Bookuncleses",
+export const metadata = pageMetadata({
+  title: "Tickets",
   description: "Buy tickets to events we host ourselves — workshops, mixers, and exhibitions.",
-};
+  path: "/tickets",
+});
 
 export default async function TicketsPage() {
   const events = await getPublishedEvents();

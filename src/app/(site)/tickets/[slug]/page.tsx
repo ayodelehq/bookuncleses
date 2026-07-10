@@ -10,6 +10,7 @@ import { ShowcaseCard } from "@/components/ui/ShowcaseCard";
 import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
 import { getEventBySlug, getPublishedEvents } from "@/lib/data/events";
 import { siteConfig } from "@/lib/site-config";
+import { pageMetadata } from "@/lib/seo";
 
 export async function generateMetadata({
   params,
@@ -18,7 +19,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const result = await getEventBySlug(slug);
-  return { title: result ? `${result.event.title} — Bookuncleses` : "Event — Bookuncleses" };
+  if (!result) return pageMetadata({ title: "Event", description: "Event details.", path: `/tickets/${slug}` });
+
+  const { event } = result;
+  return pageMetadata({
+    title: event.title,
+    description: event.description.slice(0, 160) || `${event.title} at ${event.venue}.`,
+    path: `/tickets/${slug}`,
+  });
 }
 
 export default async function EventDetailPage({ params }: { params: Promise<{ slug: string }> }) {
